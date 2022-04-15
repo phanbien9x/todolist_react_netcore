@@ -40,32 +40,24 @@ namespace TodoApi.Controllers
     // PATCH: api/Todo/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPatch("{id}")]
-    public async Task<IActionResult> PatchTodo(string id, Todo todo)
+    public async Task<ActionResult<Todo>> PatchTodo(string id, TodoBody todo)
     {
-      if (id != todo.Id)
-      {
-        return BadRequest();
-      }
+      var selectedTodo = await _context.Todos.FindAsync(id);
+      if (selectedTodo == null) return NotFound();
 
-      _context.Entry(todo).State = EntityState.Modified;
+      selectedTodo.getDataFrom(todo);
+      _context.Entry(selectedTodo).State = EntityState.Modified;
 
       try
       {
         await _context.SaveChangesAsync();
       }
-      catch (DbUpdateConcurrencyException)
+      catch (Exception ex)
       {
-        if (!TodoExists(id))
-        {
-          return NotFound();
-        }
-        else
-        {
-          throw;
-        }
+        return Problem(ex.ToString());
       }
 
-      return NoContent();
+      return selectedTodo;
     }
 
     // POST: api/Todo
@@ -78,7 +70,7 @@ namespace TodoApi.Controllers
       {
         await _context.SaveChangesAsync();
       }
-      catch (DbUpdateException)
+      catch (Exception ex)
       {
         if (TodoExists(todo.Id))
         {
@@ -86,7 +78,7 @@ namespace TodoApi.Controllers
         }
         else
         {
-          throw;
+          return Problem(ex.ToString());
         }
       }
 
@@ -104,7 +96,14 @@ namespace TodoApi.Controllers
       }
 
       _context.Todos.Remove(todo);
-      await _context.SaveChangesAsync();
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
 
       return NoContent();
     }
