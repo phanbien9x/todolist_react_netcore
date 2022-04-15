@@ -2,9 +2,9 @@ namespace Models
 {
   public class Todo
   {
-    private string Id { get; set; }
-    private string Name { get; set; }
-    private string Priority { get; set; }
-    private bool Completed { get; set; }
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public string Priority { get; set; }
+    public bool Completed { get; set; }
   }
 }
