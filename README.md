@@ -16,6 +16,7 @@
    - Microsoft.AspNetCore.Authentication.JwtBearer
    - Microsoft.IdentityModel.Tokens
    - System.IdentityModel.Tokens.Jwt
+   - Microsoft.Extensions.Configuration.Json
 2. Integrated Swagger and document
 3. Integrated Jwt token (Bearer token)
 4. Functionality
@@ -30,8 +31,9 @@
    - .NET CLI (Create a new web api)
      dotnet new webapi -o TodoApi
      cd TodoApi
-     dotnet add package Microsoft.EntityFrameworkCore.SqlServer
      dotnet dev-certs https --trust (Trust http development certificate)
+
+     -> Add all required package
 
      Add this config to .vscode/launch.json configurations to open swagger after run
      "launchBrowser": {
