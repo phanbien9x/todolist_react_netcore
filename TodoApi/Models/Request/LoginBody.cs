@@ -1,4 +1,4 @@
-namespace TodoApi.Models
+namespace Models
 {
   public class LoginBody
   {

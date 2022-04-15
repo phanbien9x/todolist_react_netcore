@@ -45,8 +45,9 @@
         }
       }
 
-      dotnet watch --no-hot-reload (to run and watch the changes of code)
-      can change listening port in ./Properties/launchSetting.json
-      and one more thing is delete default models and controllers
+    dotnet watch --no-hot-reload (to run and watch the changes of code)
+    can change listening port in ./Properties/launchSetting.json
+    and one more thing is delete default models and controllers
 
    - Create Models (User and Todo) inside folder ./Models
+   - Create Context for models inside folder ./Contexts
