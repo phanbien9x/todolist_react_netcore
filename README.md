@@ -54,7 +54,11 @@
 
    - Create database migrations from models
 
-   * .NET CLI
+      * .NET CLI
      dotnet tool install --global dotnet-ef (Install Entity Framkework CLI)
      dotnet ef Migrations add InitialCreate (Create new migration with comment)
      dotnet ef database update (Run whenever models change)
+
+    - Scaffold controllers
+      * .NET CLI
+      dotnet aspnet-codegenerator controller -name <Controller_Name> -async -api -m <Model_Name> -dc <CONTEXT_NAME> -outDir Controllers
