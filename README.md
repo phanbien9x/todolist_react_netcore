@@ -57,3 +57,4 @@
    * .NET CLI
      dotnet tool install --global dotnet-ef (Install Entity Framkework CLI)
      dotnet ef Migrations add InitialCreate (Create new migration with comment)
+     dotnet ef database update (Run whenever models change)
