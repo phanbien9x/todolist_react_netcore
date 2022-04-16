@@ -20,6 +20,9 @@ namespace TodoApi.Controllers
     }
 
     // GET: api/Todo
+    /// <summary>
+    /// Get multiple todo item.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
     {
@@ -27,6 +30,9 @@ namespace TodoApi.Controllers
     }
 
     // GET: api/Todo/5
+    /// <summary>
+    /// Get a specific todo item.
+    /// </summary>
     [HttpGet("{id}")]
     public async Task<ActionResult<Todo>> GetTodo(string id)
     {
@@ -42,6 +48,9 @@ namespace TodoApi.Controllers
 
     // PATCH: api/Todo/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Update a specific todo item.
+    /// </summary>
     [HttpPatch("{id}")]
     public async Task<ActionResult<Todo>> PatchTodo(string id, TodoBody todo)
     {
@@ -65,6 +74,9 @@ namespace TodoApi.Controllers
 
     // POST: api/Todo
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Add new Todo item.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Todo>> PostTodo(Todo todo)
     {
@@ -89,6 +101,9 @@ namespace TodoApi.Controllers
     }
 
     // DELETE: api/Todo/5
+    /// <summary>
+    /// Delete a specific todo item.
+    /// </summary>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodo(string id)
     {
