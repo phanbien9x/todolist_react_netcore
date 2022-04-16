@@ -7,7 +7,7 @@ using Models;
 
 namespace TodoApi.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("api/todo")]
   [ApiController]
   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
   public class TodoController : ControllerBase

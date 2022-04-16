@@ -8,9 +8,9 @@ namespace Models
     public bool? Completed { get; set; }
     public void getDataFrom(TodoBody data)
     {
-      if (data.Name != null) Name = data.Name;
-      if (data.Priority != null) Priority = data.Priority;
-      if (data.Completed != null) Completed = data.Completed;
+      if (data.Name != null) this.Name = data.Name;
+      if (data.Priority != null) this.Priority = data.Priority;
+      if (data.Completed != null) this.Completed = data.Completed;
     }
   }
 }
