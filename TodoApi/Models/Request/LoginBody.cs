@@ -2,7 +2,7 @@ namespace Models
 {
   public class LoginBody
   {
-    private string Username { get; set; }
-    private string Password { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
   }
 }
