@@ -164,3 +164,15 @@
         });
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+      + Add Cross origin sharing resource (Cors)
+        * Inside ./Program.cs file
+        builder.Services.AddCors(options =>
+        {
+          options.AddPolicy(name: "MyPolicy",
+            policy =>
+            {
+              policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+            });
+        });
+        ...
+        app.UseCors("MyPolicy");
