@@ -1,6 +1,6 @@
 <h1>Todolist webapi with netcore framework:</h1>
    <h3>1. Technical:</h3>
-   
+
    - Netcore framework
    - Entity framework
      Tools:
@@ -19,15 +19,15 @@
 <h3>2. Integrated Swagger and document</h3>
 <h3>3. Integrated Jwt token (Bearer token)</h3>
 <h3>4. Functionality</h3>
-   
+
    - Register, Login with User (Have roles for identify able to access)
    - CRUD with todolist
    - Cors, Bearer token and integrated them to swagger
    - Migrage data base
 <h3>5. Steps detail guide and CLI command</h3>
-   
+
    - Prerequisites: Visual Studio Code, .NET 6.0 SDK, C# extension for VSCode
-      
+
       https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
      * .NET CLI (Create a new web api)
