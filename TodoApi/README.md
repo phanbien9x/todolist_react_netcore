@@ -1,7 +1,6 @@
-=> THE PATH FOR NETCORE API
-
-1. Recreate todolist webapi with netcore framework:
-   Technical:
+<h1>Todolist webapi with netcore framework:</h1>
+   <h3>1. Technical:</h3>
+   
    - Netcore framework
    - Entity framework
      Tools:
@@ -17,25 +16,31 @@
    - Microsoft.IdentityModel.Tokens
    - System.IdentityModel.Tokens.Jwt
    - Microsoft.Extensions.Configuration.Json
-2. Integrated Swagger and document
-3. Integrated Jwt token (Bearer token)
-4. Functionality
+<h3>2. Integrated Swagger and document</h3>
+<h3>3. Integrated Jwt token (Bearer token)</h3>
+<h3>4. Functionality</h3>
+   
    - Register, Login with User (Have roles for identify able to access)
    - CRUD with todolist
    - Cors, Bearer token and integrated them to swagger
    - Migrage data base
-5. Steps detail guide and CLI command
-   Prerequisites: Visual Studio Code, .NET 6.0 SDK, C# extension for VSCode
-   https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+<h3>5. Steps detail guide and CLI command</h3>
+   
+   - Prerequisites: Visual Studio Code, .NET 6.0 SDK, C# extension for VSCode
+      
+      https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-   - .NET CLI (Create a new web api)
+     * .NET CLI (Create a new web api)
+     ```netcli
      dotnet new webapi -o TodoApi
      cd TodoApi
      dotnet dev-certs https --trust (Trust http development certificate)
+     ```
 
      -> Add all required package
 
      Add this config to .vscode/launch.json configurations to open swagger after run
+     ```json
      "launchBrowser": {
         "enabled": true,
         "args": "${auto-detect-url}",
@@ -44,9 +49,12 @@
           "args": "/C start ${auto-detect-url}/swagger"
         }
       }
-
-   dotnet watch --no-hot-reload (to run and watch the changes of code)
-   can change listening port in ./Properties/launchSetting.json
+      ```
+      * .NET CLI
+      ```netcli
+      dotnet watch --no-hot-reload (to run and watch the changes of code)
+      ```
+   - Change listening port in ./Properties/launchSetting.json
    and one more thing is delete default models and controllers
 
    - Create Models (User and Todo) inside folder ./Models
@@ -55,22 +63,29 @@
    - Create database migrations from models
 
       * .NET CLI
+     ```netcli
      dotnet tool install --global dotnet-ef (Install Entity Framkework CLI)
      dotnet ef Migrations add InitialCreate (Create new migration with comment)
      dotnet ef database update (Run whenever models change)
+     ```
 
-    - Scaffold controllers
+   - Scaffold controllers
       * .NET CLI
+      ```netcli
       dotnet aspnet-codegenerator controller -name <Controller_Name> -async -api -m <Model_Name> -dc <CONTEXT_NAME> -outDir Controllers
+      ```
 
-    - Integrated Authentication (Bearer token)
+   - Integrated Authentication (Bearer token)
       + Add JWT config to ./Properties/appsetting.json
+      ```json
         "Jwt": {
           "Key": "B7nr1zazgnqfxzvgSISz0fzzimrK3pM8uLVfVqKr",
           "Issuer": "http://localhost:44360",
           "Audience": "http://localhost:44360"
         }
+      ```
       + Add Authenticate config to ./Program.cs
+      ```c#
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
           options.TokenValidationParameters = new TokenValidationParameters()
@@ -84,9 +99,13 @@
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
           };
         });
+       ```
       + Add authentication require for controller only allow user have Role "Admin"
+      ```c#
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+      ```
       + Add config to ./Program.cs to integrated bearer token for swagger
+      ```c#
         builder.Services.AddSwaggerGen(options =>
         {
           options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -115,8 +134,10 @@
         });
         ...
         app.UseAuthentication(); (to use authentication below UseAuthorization)
+      ```
       + Return access token for login response
         * Create token string
+      ```c#
           var claims = new[]
           {
             new Claim(ClaimTypes.NameIdentifier, userinfo.Username),
@@ -138,13 +159,17 @@
           );
 
           var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+      ```
       + Add document for swagger
         * Add config to allow create document file (inside your .scproj file)
+      ```xml
           <PropertyGroup>
             <GenerateDocumentationFile>true</GenerateDocumentationFile>
             <NoWarn>$(NoWarn);1591</NoWarn>
           </PropertyGroup>
+      ```
         * Config swagger to allow xml comment inside ./Program.cs AddSwaggerGen
+      ```c#
         options.SwaggerDoc("v1", new OpenApiInfo
         {
           Version = "v1",
@@ -164,8 +189,9 @@
         });
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-      + Add Cross origin sharing resource (Cors)
-        * Inside ./Program.cs file
+      ```
+      + Add Cross origin sharing resource (Cors) inside ./Program.cs file
+      ```c#
         builder.Services.AddCors(options =>
         {
           options.AddPolicy(name: "MyPolicy",
@@ -176,3 +202,4 @@
         });
         ...
         app.UseCors("MyPolicy");
+       ```
