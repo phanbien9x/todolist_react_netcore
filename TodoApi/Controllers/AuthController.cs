@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Datacontext;
 using Models;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace TodoApi.Controllers
 {
@@ -9,11 +13,13 @@ namespace TodoApi.Controllers
   [ApiController]
   public class AuthController : ControllerBase
   {
+    private readonly IConfiguration _configuration;
     private readonly TodoApiContext _context;
 
-    public AuthController(TodoApiContext context)
+    public AuthController(TodoApiContext context, IConfiguration configuration)
     {
       _context = context;
+      _configuration = configuration;
     }
 
     // POST: api/Auth
@@ -23,7 +29,28 @@ namespace TodoApi.Controllers
     {
       var userinfo = await GetUser(body);
       if (userinfo == null) return NotFound();
-      userinfo.Access_token = "access_token";
+      var claims = new[]
+      {
+        new Claim(ClaimTypes.NameIdentifier, userinfo.Username),
+        new Claim(ClaimTypes.Email, userinfo.Email),
+        new Claim(ClaimTypes.Role, userinfo.Role),
+      };
+
+      var token = new JwtSecurityToken
+      (
+        issuer: _configuration["JWt:Issuer"],
+        audience: _configuration["JWt:Audience"],
+        claims: claims,
+        expires: DateTime.UtcNow.AddDays(30),
+        notBefore: DateTime.UtcNow,
+        signingCredentials: new SigningCredentials(
+          new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+          SecurityAlgorithms.HmacSha256
+        )
+      );
+
+      var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+      userinfo.Access_token = tokenString;
       _context.Entry(userinfo).State = EntityState.Modified;
       try
       {
@@ -33,7 +60,7 @@ namespace TodoApi.Controllers
       {
         return Problem(ex.ToString());
       }
-      return NoContent();
+      return Ok(tokenString);
     }
 
     private async Task<User> GetUser(LoginBody body)

@@ -62,3 +62,79 @@
     - Scaffold controllers
       * .NET CLI
       dotnet aspnet-codegenerator controller -name <Controller_Name> -async -api -m <Model_Name> -dc <CONTEXT_NAME> -outDir Controllers
+
+    - Integrated Authentication (Bearer token)
+      + Add JWT config to ./Properties/appsetting.json
+        "Jwt": {
+          "Key": "B7nr1zazgnqfxzvgSISz0fzzimrK3pM8uLVfVqKr",
+          "Issuer": "http://localhost:44360",
+          "Audience": "http://localhost:44360"
+        }
+      + Add Authenticate config to ./Program.cs
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+          options.TokenValidationParameters = new TokenValidationParameters()
+          {
+            ValidateActor = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+          };
+        });
+      + Add authentication require for controller only allow user have Role "Admin"
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+      + Add config to ./Program.cs to integrated bearer token for swagger
+        builder.Services.AddSwaggerGen(options =>
+        {
+          options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+          {
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Description = "Bearer Authentication with JWT token",
+            Type = SecuritySchemeType.Http
+          });
+          options.AddSecurityRequirement(new OpenApiSecurityRequirement
+          {
+            {
+              new OpenApiSecurityScheme
+              {
+                Reference = new OpenApiReference
+                {
+                  Id = "Bearer",
+                  Type = ReferenceType.SecurityScheme
+                }
+              },
+              new List<string>()
+            }
+          });
+        });
+
+        app.UseAuthentication(); (to use authentication below UseAuthorization)
+      + Return access token for login response
+        * Create token string
+          var claims = new[]
+          {
+            new Claim(ClaimTypes.NameIdentifier, userinfo.Username),
+            new Claim(ClaimTypes.Email, userinfo.Email),
+            new Claim(ClaimTypes.Role, userinfo.Role),
+          };
+
+          var token = new JwtSecurityToken
+          (
+            issuer: _configuration["JWt:Issuer"],
+            audience: _configuration["JWt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(30),
+            notBefore: DateTime.UtcNow,
+            signingCredentials: new SigningCredentials(
+              new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+              SecurityAlgorithms.HmacSha256
+            )
+          );
+
+          var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
