@@ -6,6 +6,8 @@ namespace Models
     public string Name { get; set; }
     public string Priority { get; set; }
     public bool? Completed { get; set; }
+    public DateTime DueDate { get; set; }
+    public string Attachment { get; set; }
     public void getDataFrom(TodoBody data)
     {
       if (data.Name != null) this.Name = data.Name;
