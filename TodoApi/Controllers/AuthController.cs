@@ -6,6 +6,9 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TodoApi.Controllers
 {
@@ -15,11 +18,13 @@ namespace TodoApi.Controllers
   {
     private readonly IConfiguration _configuration;
     private readonly TodoApiContext _context;
+    private readonly EmailService _emailService;
 
     public AuthController(TodoApiContext context, IConfiguration configuration)
     {
       _context = context;
       _configuration = configuration;
+      _emailService = new EmailService(_configuration);
     }
 
     // POST: api/Auth
@@ -33,6 +38,7 @@ namespace TodoApi.Controllers
     {
       var newUser = new User();
       newUser.getDataFrom(body);
+      newUser.Password = this.hashPassword(body.Password);
       _context.Users.Add(newUser);
       try
       {
@@ -62,12 +68,11 @@ namespace TodoApi.Controllers
     [Route("login")]
     public async Task<ActionResult<User>> Login(LoginBody body)
     {
-      var userinfo = await GetUser(body);
-      if (userinfo == null) return NotFound();
+      var userinfo = await GetUser(body.Username);
+      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound();
       var claims = new[]
       {
         new Claim(ClaimTypes.NameIdentifier, userinfo.Username),
-        new Claim(ClaimTypes.Email, userinfo.Email),
         new Claim(ClaimTypes.Role, userinfo.Role),
       };
 
@@ -101,7 +106,7 @@ namespace TodoApi.Controllers
     // POST: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
-    /// Register new user.
+    /// Get verification code.
     /// </summary>
     [HttpPost]
     [Route("forgot")]
@@ -109,16 +114,137 @@ namespace TodoApi.Controllers
     {
       var selected = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.Email.Equals(body.Email));
       if (selected == null) return NotFound();
-      return Ok();
+      string code = Guid.NewGuid().ToString();
+      selected.VerificationCode = code;
+      _context.Entry(selected).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+        _emailService.Send(body.Email, "You have a password reset request from TodoApi", $"Verification Code {code}");
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+      return Ok("Check your email to get Verification code");
     }
 
-    private async Task<User> GetUser(LoginBody body)
+    // POST: api/Auth
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Reset password by verification code.
+    /// </summary>
+    [HttpPost]
+    [Route("reset-password")]
+    public async Task<ActionResult<User>> ResetPassword(ResetPasswordBody body)
     {
-      return await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.Password.Equals(body.Password));
+      var selected = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.VerificationCode.Equals(body.VerificationCode));
+      if (selected == null) return NotFound();
+      selected.Password = body.NewPassword;
+      selected.VerificationCode = null;
+      _context.Entry(selected).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+      return Ok("Password has been successfully changed!");
+    }
+
+    // POST: api/Auth
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Change password by old password.
+    /// </summary>
+    [HttpPost]
+    [Route("change-password")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<User>> ChangePassword(ChangePasswordBody body)
+    {
+      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+      if (userinfo == null || !this.verifyPassword(body.OldPassword, userinfo.Password)) return NotFound();
+      userinfo.Password = this.hashPassword(body.NewPassword);
+      _context.Entry(userinfo).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+      return Ok("Password has been successfully changed!");
+    }
+
+    // POST: api/Auth
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Change password by old password.
+    /// </summary>
+    [HttpPost]
+    [Route("change-user-info")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<User>> ChangeUserInfo(ChangeUserInfoBody body)
+    {
+      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound();
+      userinfo.Email = body.Email;
+      _context.Entry(userinfo).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+      return userinfo;
+    }
+
+    // POST: api/Auth
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Login to get access token.
+    /// </summary>
+    [HttpGet]
+    [Route("logout")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<User>> Logout()
+    {
+      string username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var userinfo = await _context.Users.FindAsync(username);
+      if (userinfo == null) return NotFound();
+      userinfo.Access_token = null;
+      _context.Entry(userinfo).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+      return Ok("Logout successful!");
+    }
+
+    private async Task<User> GetUser(string username)
+    {
+      return await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(username));
     }
     private bool UserExists(RegisterBody body)
     {
       return _context.Users.Any(e => e.Username == body.Username);
+    }
+    private bool verifyPassword(string plaintext, string hashcode)
+    {
+      return BCrypt.Net.BCrypt.Verify(plaintext + _configuration["Jwt:Key"], hashcode);
+    }
+    private string hashPassword(string plaintext)
+    {
+      return BCrypt.Net.BCrypt.HashPassword(plaintext + _configuration["JWt:Key"]);
     }
   }
 }
