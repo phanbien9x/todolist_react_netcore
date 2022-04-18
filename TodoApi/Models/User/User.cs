@@ -8,9 +8,11 @@ namespace Models
     public string Username { get; set; }
     public string Password { get; set; }
     public string Access_token { get; set; }
-    public string Role { get; set; }
+    public string Role { get; set; } = "User";
     public string Email { get; set; }
     public string VerificationCode { get; set; }
+    public string GoogleId { get; set; }
+    public string FacebookId { get; set; }
     public void getDataFrom(LoginBody data)
     {
       if (data.Username != null) this.Username = data.Username;
