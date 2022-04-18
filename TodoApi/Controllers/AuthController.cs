@@ -69,7 +69,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<User>> Login(LoginBody body)
     {
       var userinfo = await GetUser(body.Username);
-      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound();
+      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound("Invalid username or password!");
       var claims = new[]
       {
         new Claim(ClaimTypes.NameIdentifier, userinfo.Username),
@@ -113,7 +113,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<User>> Forgot(ForgotBody body)
     {
       var selected = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.Email.Equals(body.Email));
-      if (selected == null) return NotFound();
+      if (selected == null) return NotFound("Invalid username or email!");
       string code = Guid.NewGuid().ToString();
       selected.VerificationCode = code;
       _context.Entry(selected).State = EntityState.Modified;
@@ -139,7 +139,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<User>> ResetPassword(ResetPasswordBody body)
     {
       var selected = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.VerificationCode.Equals(body.VerificationCode));
-      if (selected == null) return NotFound();
+      if (selected == null) return NotFound("Invalid username or verification code!");
       selected.Password = body.NewPassword;
       selected.VerificationCode = null;
       _context.Entry(selected).State = EntityState.Modified;
@@ -165,7 +165,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<User>> ChangePassword(ChangePasswordBody body)
     {
       var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      if (userinfo == null || !this.verifyPassword(body.OldPassword, userinfo.Password)) return NotFound();
+      if (userinfo == null || !this.verifyPassword(body.OldPassword, userinfo.Password)) return NotFound("Invalid username or old password!");
       userinfo.Password = this.hashPassword(body.NewPassword);
       _context.Entry(userinfo).State = EntityState.Modified;
       try
@@ -190,7 +190,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<User>> ChangeUserInfo(ChangeUserInfoBody body)
     {
       var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound();
+      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound("Invalid username or password!");
       userinfo.Email = body.Email;
       _context.Entry(userinfo).State = EntityState.Modified;
       try
@@ -216,7 +216,7 @@ namespace TodoApi.Controllers
     {
       string username = User.FindFirstValue(ClaimTypes.NameIdentifier);
       var userinfo = await _context.Users.FindAsync(username);
-      if (userinfo == null) return NotFound();
+      if (userinfo == null) return NotFound("Invalid username!");
       userinfo.Access_token = null;
       _context.Entry(userinfo).State = EntityState.Modified;
       try
