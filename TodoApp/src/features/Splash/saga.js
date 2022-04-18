@@ -8,11 +8,14 @@ function* login({ payload }) {
   try {
     const res = yield call(() => apiLogin(payload));
     payload.remember ? persistor.persist() : storage.removeItem('persist:root') && persistor.pause();
-    res.data.statusCode === 200
-      ? yield put(LOGIN_SUCCESS(res.data.value))
-      : yield put(LOGIN_FAILURE({ message: res.data.statusCode, description: res.data.value }));
+    yield put(LOGIN_SUCCESS(res.data));
   } catch (error) {
-    yield put(LOGIN_FAILURE({ message: 'Error', description: error.toString() }));
+    yield put(
+      LOGIN_FAILURE({
+        message: error.response.status,
+        description: error.response.data,
+      })
+    );
   }
 }
 
