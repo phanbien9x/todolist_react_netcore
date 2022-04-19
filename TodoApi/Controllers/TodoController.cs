@@ -9,7 +9,7 @@ namespace TodoApi.Controllers
 {
   [Route("api/todo")]
   [ApiController]
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class TodoController : ControllerBase
   {
     private readonly TodoApiContext _context;
@@ -105,7 +105,7 @@ namespace TodoApi.Controllers
     /// Delete a specific todo item.
     /// </summary>
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTodo(string id)
+    public async Task<ActionResult<Todo>> DeleteTodo(string id)
     {
       var todo = await _context.Todos.FindAsync(id);
       if (todo == null)
@@ -123,7 +123,7 @@ namespace TodoApi.Controllers
         return Problem(ex.ToString());
       }
 
-      return NoContent();
+      return todo;
     }
 
     private bool TodoExists(string id)
