@@ -4,6 +4,7 @@ export const filtersSelector = (state) => state.filters;
 export const todoListSelector = (state) => state.todoList;
 export const loaderSelector = (state) => state.loader;
 export const access_tokenSelector = (state) => state.access_token;
+export const userinfoSelector = (state) => state.userinfo;
 
 export const todoListRemainSelector = createSelector(filtersSelector, todoListSelector, (filters, todoList) =>
   todoList.filter(

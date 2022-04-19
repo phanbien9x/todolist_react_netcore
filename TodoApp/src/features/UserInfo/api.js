@@ -1,3 +1,4 @@
 import axios from 'axios';
 
-export const apiChangeUserInfo = () => axios.post('/change-user-info');
+export const apiGetUserInfo = () => axios.get('/user-info');
+export const apiChangeUserInfo = (data) => axios.patch('/user-info', data);

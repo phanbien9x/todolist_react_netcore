@@ -1,52 +1,84 @@
 import './style.css';
 import React, { useEffect } from 'react';
-import { Typography, Spin, notification, Divider, Input, Button } from 'antd';
-import { useSelector } from 'react-redux';
-import { access_tokenSelector, loaderSelector } from '../../app/selector';
-import { useNavigate } from 'react-router-dom';
+import { Typography, Divider, Input, Button, Form } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { userinfoSelector } from '../../app/selector';
+import { CHANGE_USERINFO_REQUEST, GET_USERINFO_REQUEST } from './slice';
 
 const { Title } = Typography;
+const { Password } = Input;
 
 function UserInfo() {
-  const navigate = useNavigate();
-  const access_token = useSelector(access_tokenSelector);
-  const loader = useSelector(loaderSelector);
+  const userinfo = useSelector(userinfoSelector);
+  const dispatch = useDispatch();
   useEffect(() => {
-    !access_token && navigate('/login');
-  }, [access_token, navigate]);
-  useEffect(() => {
-    const { message, description } = loader.error;
-    (loader.error.message !== null || loader.error.description !== null) &&
-      notification['error']({
-        message,
-        description,
-      });
-  }, [loader.error]);
+    dispatch(GET_USERINFO_REQUEST());
+  }, [dispatch]);
+  const onFinish = (values) => {
+    dispatch(CHANGE_USERINFO_REQUEST(values));
+  };
   return (
-    <Spin tip='Loading' spinning={loader.loading} wrapperClassName='main__spin__container'>
-      <div
-        style={{
-          width: 500,
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: 'white',
-          padding: 20,
-          boxShadow: '0 0 10px 4px #bfbfbf',
-          borderRadius: 5,
-          minHeight: 'calc(50vh)',
+    <div
+      style={{
+        width: 500,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        padding: 20,
+        boxShadow: '0 0 10px 4px #bfbfbf',
+        borderRadius: 5,
+        minHeight: 'calc(50vh)',
+        margin: '0 auto',
+      }}
+    >
+      <Title style={{ textAlign: 'center' }}>User information</Title>
+      <Divider />
+      <Form
+        className='userinfo-form'
+        onFinish={onFinish}
+        initialValues={{
+          email: userinfo.email,
+          role: userinfo.role,
         }}
       >
-        <Title style={{ textAlign: 'center' }}>User information</Title>
-        <Divider />
-        <div className='userinfo-form-container'>
+        <Form.Item
+          name='email'
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Email!',
+            },
+          ]}
+        >
           <Input addonBefore='Email' placeholder='Email' allowClear />
+        </Form.Item>
+        <Form.Item name='role'>
           <Input addonBefore='Role' placeholder='Role' allowClear disabled />
-          <Button style={{ marginTop: 'auto' }} type='primary' shape='round'>
+        </Form.Item>
+        <Form.Item
+          name='password'
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Password!',
+            },
+          ]}
+        >
+          <Password
+            value={userinfo.role}
+            style={{ marginTop: '30px' }}
+            addonBefore='Confirm your password'
+            placeholder='Confirm your password'
+            allowClear
+          />
+        </Form.Item>
+        <Form.Item style={{ marginTop: 'auto' }}>
+          <Button style={{ width: '100%' }} type='primary' htmlType='submit'>
             Update
           </Button>
-        </div>
-      </div>
-    </Spin>
+        </Form.Item>
+      </Form>
+    </div>
   );
 }
 
