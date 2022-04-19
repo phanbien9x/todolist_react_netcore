@@ -7,13 +7,14 @@ import store, { persistor } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
+import Sidebar from './layouts/Sidebar/Sidebar';
 
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<App />} />
+          <Route path='/' element={<Sidebar><App /></Sidebar>} />
           <Route path='/login' element={<Splash />} />
           <Route element={Splash} />
           <Route
