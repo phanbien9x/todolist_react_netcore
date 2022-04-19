@@ -182,31 +182,6 @@ namespace TodoApi.Controllers
     // POST: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
-    /// Change userinfo with current access_token.
-    /// </summary>
-    [HttpPost]
-    [Route("change-user-info")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<User>> ChangeUserInfo(ChangeUserInfoBody body)
-    {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound("Invalid username or password!");
-      userinfo.Email = body.Email;
-      _context.Entry(userinfo).State = EntityState.Modified;
-      try
-      {
-        await _context.SaveChangesAsync();
-      }
-      catch (Exception ex)
-      {
-        return Problem(ex.ToString());
-      }
-      return userinfo;
-    }
-
-    // POST: api/Auth
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    /// <summary>
     /// Login to get access token.
     /// </summary>
     [HttpGet]
