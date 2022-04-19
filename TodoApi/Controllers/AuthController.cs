@@ -157,7 +157,7 @@ namespace TodoApi.Controllers
     // POST: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
-    /// Change password by old password.
+    /// Change password with current password.
     /// </summary>
     [HttpPost]
     [Route("change-password")]
@@ -165,7 +165,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<User>> ChangePassword(ChangePasswordBody body)
     {
       var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      if (userinfo == null || !this.verifyPassword(body.OldPassword, userinfo.Password)) return NotFound("Invalid username or old password!");
+      if (userinfo == null || !this.verifyPassword(body.CurrentPassword, userinfo.Password)) return NotFound("Invalid username or current password!");
       userinfo.Password = this.hashPassword(body.NewPassword);
       _context.Entry(userinfo).State = EntityState.Modified;
       try
@@ -182,7 +182,7 @@ namespace TodoApi.Controllers
     // POST: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
-    /// Change password by old password.
+    /// Change userinfo with current access_token.
     /// </summary>
     [HttpPost]
     [Route("change-user-info")]
