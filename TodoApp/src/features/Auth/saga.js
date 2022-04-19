@@ -8,6 +8,7 @@ import {
   LOGOUT_FAILURE,
   LOGOUT_SUCCESS,
 } from './slice.js';
+import { GET_USERINFO_SUCCESS } from '../UserInfo/slice.js';
 import { persistor } from './../../app/store.js';
 import storage from 'redux-persist/lib/storage';
 
@@ -15,7 +16,9 @@ function* login({ payload }) {
   try {
     const res = yield call(() => apiLogin(payload));
     payload.remember ? persistor.persist() : storage.removeItem('persist:root') && persistor.pause();
-    yield put(LOGIN_SUCCESS(res.data));
+    yield put(LOGIN_SUCCESS(res.data.access_token));
+    delete res.data['access_token'];
+    yield put(GET_USERINFO_SUCCESS(res.data));
   } catch (error) {
     yield put(
       LOGIN_FAILURE({

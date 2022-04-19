@@ -20,6 +20,20 @@ function Sidebar(props) {
   useEffect(() => {
     !access_token && navigate('/login');
   }, [access_token, navigate]);
+  let pathname = 'home';
+  switch (window.location.pathname) {
+    case '/':
+      pathname = 'home';
+      break;
+    case '/user-info':
+      pathname = 'userinfo';
+      break;
+    case '/change-password':
+      pathname = 'changepassword';
+      break;
+    default:
+      break;
+  }
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -29,14 +43,14 @@ function Sidebar(props) {
           setCollapsed(!collapsed);
         }}
       >
-        <Menu className='sidebar__list' theme='dark' defaultSelectedKeys={['1']} mode='inline'>
-          <Menu.Item onClick={() => navigate('/')} key='1' icon={<HomeOutlined />}>
+        <Menu className='sidebar__list' theme='dark' defaultSelectedKeys={[pathname]} mode='inline'>
+          <Menu.Item onClick={() => navigate('/')} key='home' icon={<HomeOutlined />}>
             Home
           </Menu.Item>
-          <Menu.Item onClick={() => navigate('/user-info')} key='2' icon={<UserOutlined />}>
+          <Menu.Item onClick={() => navigate('/user-info')} key='userinfo' icon={<UserOutlined />}>
             User informations
           </Menu.Item>
-          <Menu.Item onClick={() => navigate('/change-password')} key='3' icon={<KeyOutlined />}>
+          <Menu.Item onClick={() => navigate('/change-password')} key='changepassword' icon={<KeyOutlined />}>
             Change password
           </Menu.Item>
           <Menu.Item onClick={handleClickLogout} className='sidebar__lastitem' key='4' icon={<LogoutOutlined />}>

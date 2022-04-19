@@ -17,7 +17,7 @@ const store = configureStore({
       key: 'root',
       version: 1,
       storage,
-      whitelist: ['access_token'],
+      whitelist: ['access_token', 'userinfo'],
       blacklist: ['_persist'],
     },
     combineReducers({
