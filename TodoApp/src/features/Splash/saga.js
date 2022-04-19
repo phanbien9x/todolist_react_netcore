@@ -13,7 +13,7 @@ function* login({ payload }) {
     yield put(
       LOGIN_FAILURE({
         message: error.response.status,
-        description: error.response.data,
+        description: error.response.data !== '' ? error.response.data : error.response.statusText,
       })
     );
   }

@@ -11,22 +11,28 @@ import {
 function* todoList_Listing() {
   try {
     const res = yield call(apiTodolist_Listing);
-    res.data.statusCode === 200
-      ? yield put(TODOLIST_LISTING_SUCCESS(res.data))
-      : yield put(TODOLIST_LISTING_FAILURE({ message: res.data.statusCode, description: res.data.value }));
+    yield put(TODOLIST_LISTING_SUCCESS(res.data));
   } catch (error) {
-    yield put(TODOLIST_LISTING_FAILURE({ message: 'Error', description: error.toString() }));
+    yield put(
+      TODOLIST_LISTING_FAILURE({
+        message: error.response.status,
+        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+      })
+    );
   }
 }
 
 function* todoList_Add({ payload }) {
   try {
     const res = yield call(() => apiTodolist_Add(payload));
-    res.data.statusCode === 200
-      ? yield put(TODOLIST_ADD_SUCCESS(payload))
-      : yield put(TODOLIST_ADD_FAILURE({ message: res.data.statusCode, description: res.data.value }));
+    yield put(TODOLIST_ADD_SUCCESS(res.data));
   } catch (error) {
-    yield put(TODOLIST_ADD_FAILURE({ message: 'Error', description: error.toString() }));
+    yield put(
+      TODOLIST_ADD_FAILURE({
+        message: error.response.status,
+        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+      })
+    );
   }
 }
 

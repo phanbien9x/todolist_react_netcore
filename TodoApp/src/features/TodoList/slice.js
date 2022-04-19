@@ -6,16 +6,16 @@ const TodoListSlice = createSlice({
   initialState: [],
   reducers: {
     TODOLIST_LISTING_SUCCESS: (state, { payload }) => {
-      return payload.value;
+      return payload;
     },
     TODOLIST_ADD_SUCCESS: (state, { payload }) => {
       state.push(payload);
     },
     TODO_UPDATE_SUCCESS: (state, { payload }) => {
       const current = state.find((item) => item.id === payload.id);
-      payload.data.name !== undefined && (current.name = payload.data.name);
-      payload.data.priority !== undefined && (current.priority = payload.data.priority);
-      payload.data.completed !== undefined && (current.completed = payload.data.completed);
+      payload.name !== undefined && (current.name = payload.name);
+      payload.priority !== undefined && (current.priority = payload.priority);
+      payload.completed !== undefined && (current.completed = payload.completed);
     },
     TODO_DELETE_SUCCESS: (state, { payload }) => {
       return state.filter((item) => item.id !== payload.id);

@@ -12,22 +12,28 @@ import {
 function* todo_Update({ payload }) {
   try {
     const res = yield call(() => apiTodo_Update(payload));
-    res.data.statusCode === 200
-      ? yield put(TODO_UPDATE_SUCCESS(payload))
-      : yield put(TODO_UPDATE_FAILURE({ message: res.data.statusCode, description: res.data.value }));
+    yield put(TODO_UPDATE_SUCCESS(res.data));
   } catch (error) {
-    yield put(TODO_UPDATE_FAILURE({ message: 'Error', description: error.toString() }));
+    yield put(
+      TODO_UPDATE_FAILURE({
+        message: error.response.status,
+        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+      })
+    );
   }
 }
 
 function* todo_Delete({ payload }) {
   try {
     const res = yield call(() => apiTodo_Delete(payload.id));
-    res.data.statusCode === 200
-      ? yield put(TODO_DELETE_SUCCESS(payload))
-      : yield put(TODO_DELETE_FAILURE({ message: res.data.statusCode, description: res.data.value }));
+    yield put(TODO_DELETE_SUCCESS(res.data));
   } catch (error) {
-    yield put(TODO_DELETE_FAILURE({ message: 'Error', description: error.toString() }));
+    yield put(
+      TODO_DELETE_FAILURE({
+        message: error.response.status,
+        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+      })
+    );
   }
 }
 
