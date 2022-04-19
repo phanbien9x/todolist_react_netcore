@@ -13,8 +13,12 @@
   margin-bottom: 10px;
 }
 
-.userinfo-form-container {
+.change-password {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.change-password .ant-form-item {
+  margin-bottom: 0;
 }

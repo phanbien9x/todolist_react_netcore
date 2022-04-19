@@ -1,3 +1,3 @@
 import axios from 'axios';
 
-export const apiChangePassword = () => axios.post('/change-password');
+export const apiChangePassword = (data) => axios.patch('/change-password', data);

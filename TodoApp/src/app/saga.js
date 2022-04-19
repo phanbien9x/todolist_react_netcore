@@ -3,7 +3,8 @@ import todoListSaga from './../features/TodoList/saga.js';
 import todoSaga from './../features/Todo/saga.js';
 import authSaga from './../features/Auth/saga.js';
 import userinfoSaga from './../features/UserInfo/saga.js';
+import changePasswordSaga from './../features/ChangePassword/saga.js';
 
 export default function* rootSaga() {
-  yield all([authSaga(), todoListSaga(), todoSaga(), userinfoSaga()]);
+  yield all([authSaga(), todoListSaga(), todoSaga(), userinfoSaga(), changePasswordSaga()]);
 }

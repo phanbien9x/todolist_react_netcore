@@ -42,7 +42,7 @@ function* changeUserInfo({ payload }) {
   }
 }
 
-export default function* todoListSaga() {
+export default function* userinfoSaga() {
   yield takeLatest(GET_USERINFO_REQUEST().type, getUserInfo);
   yield takeLatest(CHANGE_USERINFO_REQUEST().type, changeUserInfo);
 }

@@ -1,10 +1,17 @@
 import './style.css';
 import React from 'react';
-import { Typography, Divider, Input, Button } from 'antd';
+import { Typography, Divider, Input, Button, Form } from 'antd';
+import { useDispatch } from 'react-redux';
+import { CHANGE_PASSWORD_REQUEST } from './slice';
 
 const { Title } = Typography;
+const { Password } = Input;
 
 function ChangePassword() {
+  const dispatch = useDispatch();
+  const onFinish = (values) => {
+    dispatch(CHANGE_PASSWORD_REQUEST(values));
+  };
   return (
     <div
       style={{
@@ -21,13 +28,33 @@ function ChangePassword() {
     >
       <Title style={{ textAlign: 'center' }}>Change password</Title>
       <Divider />
-      <div className='userinfo-form-container'>
-        <Input addonBefore='Current password' placeholder='Current password' allowClear />
-        <Input addonBefore='New password' placeholder='New password' allowClear />
-        <Button style={{ marginTop: 'auto' }} type='primary' shape='round'>
+      <Form className='change-password' onFinish={onFinish}>
+        <Form.Item
+          name='currentPassword'
+          rules={[
+            {
+              required: true,
+              message: 'Please input your current password!',
+            },
+          ]}
+        >
+          <Password addonBefore='Current password' placeholder='Current password' allowClear />
+        </Form.Item>
+        <Form.Item
+          name='newPassword'
+          rules={[
+            {
+              required: true,
+              message: 'Please input your new password!',
+            },
+          ]}
+        >
+          <Password addonBefore='New password' placeholder='New password' allowClear />
+        </Form.Item>
+        <Button style={{ marginTop: 'auto' }} type='primary' htmlType='submit'>
           Update
         </Button>
-      </div>
+      </Form>
     </div>
   );
 }
