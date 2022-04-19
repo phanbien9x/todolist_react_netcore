@@ -34,7 +34,7 @@ namespace TodoApi.Controllers
     {
       var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
       if (userinfo == null) return NotFound("Invalid username!");
-      return userinfo;
+      return Ok(UserResponse.getDataFrom(userinfo));
     }
 
     // POST: api/Auth
@@ -58,7 +58,7 @@ namespace TodoApi.Controllers
       {
         return Problem(ex.ToString());
       }
-      return userinfo;
+      return Ok(UserResponse.getDataFrom(userinfo));
     }
     private bool verifyPassword(string plaintext, string hashcode)
     {

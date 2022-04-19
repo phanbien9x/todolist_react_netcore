@@ -66,7 +66,7 @@ namespace TodoApi.Controllers
     /// </summary>
     [HttpPost]
     [Route("login")]
-    public async Task<ActionResult<User>> Login(LoginBody body)
+    public async Task<ActionResult<UserResponse>> Login(LoginBody body)
     {
       var userinfo = await GetUser(body.Username);
       if (userinfo == null || !this.verifyPassword(body.Password, userinfo.Password)) return NotFound("Invalid username or password!");
@@ -100,7 +100,7 @@ namespace TodoApi.Controllers
       {
         return Problem(ex.ToString());
       }
-      return Ok(tokenString);
+      return Ok(UserResponse.getDataFrom(userinfo));
     }
 
     // POST: api/Auth
