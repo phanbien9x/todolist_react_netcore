@@ -1,0 +1,10 @@
+@import '~antd/dist/antd.css';
+
+.ant-select-multiple .ant-select-selection-item {
+  height: 27px;
+}
+
+.main__spin__container {
+  display: flex;
+  justify-content: center;
+}

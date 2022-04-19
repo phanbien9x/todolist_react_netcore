@@ -1,22 +1,24 @@
-import { Typography, Divider, Spin, notification } from 'antd';
+import { notification } from 'antd';
 import './App.css';
-import TodoList from './features/TodoList/index.js';
-import Filters from './features/Filters/index.js';
 import { useSelector } from 'react-redux';
-import { access_tokenSelector, loaderSelector } from './app/selector.js';
+import { access_tokenSelector, loaderSelector } from './app/selector';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { BASE_URL } from './app/config.js';
-
-const { Title } = Typography;
+import Sidebar from './layouts/Sidebar/Sidebar';
+import Auth from './features/Auth';
+import UserInfo from './features/UserInfo';
+import ChangePassword from './features/ChangePassword';
+import { BASE_URL } from './app/config';
+import Home from './features/Home/index';
 
 function App() {
-  let navigate = useNavigate();
   const access_token = useSelector(access_tokenSelector);
-  const loader = useSelector(loaderSelector);
   axios.defaults.baseURL = BASE_URL;
   axios.defaults.headers.post['Content-Type'] = 'Content-Type application/x-www-form-urlencoded';
+  axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+  let navigate = useNavigate();
+  const loader = useSelector(loaderSelector);
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
     !access_token && navigate('/login');
@@ -30,25 +32,42 @@ function App() {
       });
   }, [loader.error]);
   return (
-    <Spin tip='Loading' spinning={loader.loading} wrapperClassName='main__spin__container'>
-      <div
-        style={{
-          width: 500,
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: 'white',
-          padding: 20,
-          boxShadow: '0 0 10px 4px #bfbfbf',
-          borderRadius: 5,
-          minHeight: 'calc(100vh - 80px)',
-        }}
-      >
-        <Title style={{ textAlign: 'center' }}>TODO APP with REDUX</Title>
-        <Filters />
-        <Divider />
-        <TodoList />
-      </div>
-    </Spin>
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <Sidebar>
+            <Home />
+          </Sidebar>
+        }
+      />
+      <Route
+        path='/user-info'
+        element={
+          <Sidebar>
+            <UserInfo />
+          </Sidebar>
+        }
+      />
+      <Route
+        path='/change-password'
+        element={
+          <Sidebar>
+            <ChangePassword />
+          </Sidebar>
+        }
+      />
+      <Route path='/login' element={<Auth />} />
+      <Route element={Auth} />
+      <Route
+        path='*'
+        element={
+          <main style={{ padding: '1rem' }}>
+            <p>There's nothing here!</p>
+          </main>
+        }
+      />
+    </Routes>
   );
 }
 
