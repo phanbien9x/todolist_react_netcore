@@ -129,12 +129,12 @@ namespace TodoApi.Controllers
       return Ok("Check your email to get Verification code");
     }
 
-    // POST: api/Auth
+    // PATCH: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
     /// Reset password by verification code.
     /// </summary>
-    [HttpPost]
+    [HttpPatch]
     [Route("reset-password")]
     public async Task<ActionResult<User>> ResetPassword(ResetPasswordBody body)
     {
@@ -154,12 +154,12 @@ namespace TodoApi.Controllers
       return Ok("Password has been successfully changed!");
     }
 
-    // POST: api/Auth
+    // PATCH: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
     /// Change password with current password.
     /// </summary>
-    [HttpPost]
+    [HttpPatch]
     [Route("change-password")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<User>> ChangePassword(ChangePasswordBody body)
