@@ -8,6 +8,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
 import Sidebar from './layouts/Sidebar/Sidebar';
+import UserInfo from './features/UserInfo';
+import ChangePassword from './features/ChangePassword';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -15,6 +17,8 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Sidebar><App /></Sidebar>} />
+          <Route path='/user-info' element={<Sidebar><UserInfo /></Sidebar>} />
+          <Route path='/change-password' element={<Sidebar><ChangePassword /></Sidebar>} />
           <Route path='/login' element={<Auth />} />
           <Route element={Auth} />
           <Route

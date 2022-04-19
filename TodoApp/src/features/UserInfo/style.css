@@ -1,0 +1,20 @@
+@import '~antd/dist/antd.css';
+
+.ant-select-multiple .ant-select-selection-item {
+  height: 27px;
+}
+
+.main__spin__container {
+  display: flex;
+  justify-content: center;
+}
+
+.ant-input-group-wrapper {
+  margin-bottom: 10px;
+}
+
+.userinfo-form-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

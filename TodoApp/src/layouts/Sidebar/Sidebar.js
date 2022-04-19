@@ -30,13 +30,13 @@ function Sidebar(props) {
         }}
       >
         <Menu className='sidebar__list' theme='dark' defaultSelectedKeys={['1']} mode='inline'>
-          <Menu.Item key='1' icon={<HomeOutlined />}>
+          <Menu.Item onClick={() => navigate('/')} key='1' icon={<HomeOutlined />}>
             Home
           </Menu.Item>
-          <Menu.Item key='2' icon={<UserOutlined />}>
+          <Menu.Item onClick={() => navigate('/user-info')} key='2' icon={<UserOutlined />}>
             User informations
           </Menu.Item>
-          <Menu.Item key='3' icon={<KeyOutlined />}>
+          <Menu.Item onClick={() => navigate('/change-password')} key='3' icon={<KeyOutlined />}>
             Change password
           </Menu.Item>
           <Menu.Item onClick={handleClickLogout} className='sidebar__lastitem' key='4' icon={<LogoutOutlined />}>
