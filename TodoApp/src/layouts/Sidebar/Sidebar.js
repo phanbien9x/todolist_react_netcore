@@ -1,14 +1,25 @@
 import './Sidebar.css';
 import { Layout, Menu } from 'antd';
 import { HomeOutlined, KeyOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { LOGOUT_REQUEST } from './../../features/Auth/slice.js';
 import { useNavigate } from 'react-router-dom';
+import { access_tokenSelector } from '../../app/selector';
 
 const { Content, Sider } = Layout;
 
 function Sidebar(props) {
   const [collapsed, setCollapsed] = useState(true);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const access_token = useSelector(access_tokenSelector);
+  const handleClickLogout = () => {
+    dispatch(LOGOUT_REQUEST());
+  };
+  useEffect(() => {
+    !access_token && navigate('/login');
+  }, [access_token, navigate]);
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -28,14 +39,7 @@ function Sidebar(props) {
           <Menu.Item key='3' icon={<KeyOutlined />}>
             Change password
           </Menu.Item>
-          <Menu.Item
-            onClick={() => {
-              navigate('/Login');
-            }}
-            className='sidebar__lastitem'
-            key='4'
-            icon={<LogoutOutlined />}
-          >
+          <Menu.Item onClick={handleClickLogout} className='sidebar__lastitem' key='4' icon={<LogoutOutlined />}>
             Logout
           </Menu.Item>
         </Menu>

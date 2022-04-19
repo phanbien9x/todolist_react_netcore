@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Splash from './features/Splash/index.js';
+import Auth from './features/Auth/index.js';
 import { Provider } from 'react-redux';
 import store, { persistor } from './app/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -15,8 +15,8 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Sidebar><App /></Sidebar>} />
-          <Route path='/login' element={<Splash />} />
-          <Route element={Splash} />
+          <Route path='/login' element={<Auth />} />
+          <Route element={Auth} />
           <Route
             path='*'
             element={

@@ -1,6 +1,13 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { apiLogin } from './api.js';
-import { LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS } from './slice.js';
+import { apiLogin, apiLogout } from './api.js';
+import {
+  LOGIN_REQUEST,
+  LOGIN_FAILURE,
+  LOGIN_SUCCESS,
+  LOGOUT_REQUEST,
+  LOGOUT_FAILURE,
+  LOGOUT_SUCCESS,
+} from './slice.js';
 import { persistor } from './../../app/store.js';
 import storage from 'redux-persist/lib/storage';
 
@@ -19,6 +26,22 @@ function* login({ payload }) {
   }
 }
 
+function* logout({ payload }) {
+  try {
+    yield call(() => apiLogout(payload));
+    yield put(LOGOUT_SUCCESS(null));
+    storage.removeItem('persist:root') && persistor.pause();
+  } catch (error) {
+    yield put(
+      LOGOUT_FAILURE({
+        message: error.response.status,
+        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+      })
+    );
+  }
+}
+
 export default function* todoListSaga() {
   yield takeLatest(LOGIN_REQUEST().type, login);
+  yield takeLatest(LOGOUT_REQUEST().type, logout);
 }

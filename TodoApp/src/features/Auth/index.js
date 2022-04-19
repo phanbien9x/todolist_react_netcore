@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const { Title } = Typography;
 
-function Splash() {
+function Login() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const loader = useSelector(loaderSelector);
@@ -94,4 +94,4 @@ function Splash() {
   );
 }
 
-export default Splash;
+export default Login;
