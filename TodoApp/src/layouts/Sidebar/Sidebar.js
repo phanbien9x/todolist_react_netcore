@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import { HomeOutlined, KeyOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOGOUT_REQUEST } from './../../features/Auth/slice.js';
+import { LOGOUT_REQUEST } from './../../features/Login/slice.js';
 import { useNavigate } from 'react-router-dom';
 import { access_tokenSelector } from '../../app/selector';
 

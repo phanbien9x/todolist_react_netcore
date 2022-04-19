@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Sidebar from './layouts/Sidebar/Sidebar';
-import Auth from './features/Auth';
+import Login from './features/Login';
 import UserInfo from './features/UserInfo';
 import ChangePassword from './features/ChangePassword';
 import { BASE_URL } from './app/config';
@@ -57,8 +57,8 @@ function App() {
           </Sidebar>
         }
       />
-      <Route path='/login' element={<Auth />} />
-      <Route element={Auth} />
+      <Route path='/login' element={<Login />} />
+      <Route element={Login} />
       <Route
         path='*'
         element={

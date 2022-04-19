@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import FiltersSlice from './../features/Filters/slice.js';
 import TodoListSlice from './../features/TodoList/slice.js';
-import AuthSlice from './../features/Auth/slice.js';
+import LoginSlice from './../features/Login/slice.js';
 import LoaderSlice from './LoaderSlice.js';
 import UserInfoSlice from './../features/UserInfo/slice.js';
 import createSagaMiddleware from 'redux-saga';
@@ -24,7 +24,7 @@ const store = configureStore({
       filters: FiltersSlice,
       todoList: TodoListSlice,
       loader: LoaderSlice,
-      access_token: AuthSlice,
+      access_token: LoginSlice,
       userinfo: UserInfoSlice,
     })
   ),
