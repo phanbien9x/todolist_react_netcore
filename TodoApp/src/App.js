@@ -22,7 +22,9 @@ function App() {
   const loader = useSelector(loaderSelector);
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
-    !access_token && navigate('/register');
+    !['login', '/register', '/forgot-password', '/reset-password'].includes(window.location.pathname) &&
+      !access_token &&
+      navigate('/login');
   }, [access_token, navigate]);
   useEffect(() => {
     const { message, description } = loader.error;

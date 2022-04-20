@@ -76,7 +76,7 @@ function Register() {
           <Button type='primary' htmlType='submit' className='register-form-button'>
             Register
           </Button>
-          Or <a href='/login'>Login</a>
+          Or <a href='/login'>Login now !</a>
         </Form.Item>
       </Form>
     </div>
