@@ -1,14 +1,14 @@
 import { Typography, Form, Input, Button } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { UserOutlined, MailOutlined } from '@ant-design/icons';
 import './index.css';
 import { useDispatch } from 'react-redux';
-import { REGISTER_REQUEST } from './slice.js';
+import { RECOVER_PASSWORD_REQUEST } from './slice.js';
 const { Title } = Typography;
 
-function Register() {
+function RecoverPassword() {
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    dispatch(REGISTER_REQUEST(values));
+    dispatch(RECOVER_PASSWORD_REQUEST(values));
   };
   return (
     <div
@@ -24,10 +24,10 @@ function Register() {
         margin: '0 auto',
       }}
     >
-      <Title style={{ textAlign: 'center' }}>REGISTER</Title>
+      <Title style={{ textAlign: 'center' }}>RECOVER PASSWORD</Title>
       <Form
-        name='normal_register'
-        className='register-form'
+        name='normal_recover'
+        className='recover-form'
         initialValues={{
           remember: true,
         }}
@@ -55,26 +55,9 @@ function Register() {
         >
           <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Username' />
         </Form.Item>
-        <Form.Item
-          name='password'
-          rules={[
-            {
-              required: true,
-              message: 'Please input your Password!',
-            },
-          ]}
-        >
-          <Input prefix={<LockOutlined className='site-form-item-icon' />} type='password' placeholder='Password' />
-        </Form.Item>
         <Form.Item>
-          <a className='register-form-recover' href='/recover-password'>
-            Forgot password
-          </a>
-        </Form.Item>
-
-        <Form.Item>
-          <Button type='primary' htmlType='submit' className='register-form-button'>
-            Register
+          <Button type='primary' htmlType='submit' className='recover-form-button'>
+            Send verification code to email
           </Button>
           Or <a href='/login'>Login now !</a>
         </Form.Item>
@@ -83,4 +66,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RecoverPassword;

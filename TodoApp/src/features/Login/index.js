@@ -77,7 +77,7 @@ function Login() {
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
-          <a className='login-form-forgot' href='/forgot-password'>
+          <a className='login-form-recover' href='/recover-password'>
             Forgot password
           </a>
         </Form.Item>

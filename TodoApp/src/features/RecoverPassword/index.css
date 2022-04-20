@@ -4,12 +4,12 @@
   height: 27px;
 }
 
-.register-form-recover {
+.recover-form-recover {
   float: right;
 }
-.ant-col-rtl .register-form-recover {
+.ant-col-rtl .recover-form-recover {
   float: left;
 }
-.register-form-button {
+.recover-form-button {
   width: 100%;
 }

@@ -4,10 +4,10 @@
   height: 27px;
 }
 
-.login-form-forgot {
+.login-form-recover {
   float: right;
 }
-.ant-col-rtl .login-form-forgot {
+.ant-col-rtl .login-form-recover {
   float: left;
 }
 .login-form-button {
