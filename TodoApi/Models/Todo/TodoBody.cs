@@ -5,5 +5,7 @@ namespace Models
     public string Name { get; set; }
     public string Priority { get; set; }
     public bool? Completed { get; set; }
+    public DateTime? DueDate { get; set; }
+    public string Attachment { get; set; }
   }
 }
