@@ -55,19 +55,22 @@ export default function TodoList() {
   return (
     <Row>
       <Col span={24} style={{ overflowY: 'auto', height: 'calc(100vh - 460px)' }}>
-        {todoList.map((item) => (
-          <Todo
-            id={item.id}
-            key={item.id}
-            name={item.name}
-            priority={item.priority}
-            completed={item.completed}
-            setName={setName}
-            setPriority={setPriority}
-            setBtnTxt={setBtnTxt}
-            setSelected={setSelected}
-          />
-        ))}
+        {todoList.map((item) => {
+          return (
+            <Todo
+              id={item.id}
+              key={item.id}
+              name={item.name}
+              priority={item.priority}
+              dueDate={item.dueDate}
+              completed={item.completed}
+              setName={setName}
+              setPriority={setPriority}
+              setBtnTxt={setBtnTxt}
+              setSelected={setSelected}
+            />
+          );
+        })}
       </Col>
       <Col span={24}>
         <Input.Group style={{ display: 'flex' }} compact>
