@@ -21,13 +21,13 @@
 
   <h4>* Backend - Netcore 6.0 webapi</h4>
 
-  - Register, Login, Forgot password (Have roles for identify able to access)
+  - Register, Login, Recover password (Have roles for identify able to access)
   - CRUD with todolist
   - Cors, Bearer token and integrated them to swagger
   - Migrage data base
 
   <h4>* Frontend - Reactjs webapp</h4>
 
-  - Register, Login, Forgot password (Login with facebook, google)
+  - Register, Login, Recover password (Login with facebook, google)
   - CRUD with todolist
   - Push notification

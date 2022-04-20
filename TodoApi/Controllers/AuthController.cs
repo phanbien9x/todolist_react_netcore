@@ -109,8 +109,8 @@ namespace TodoApi.Controllers
     /// Get verification code.
     /// </summary>
     [HttpPost]
-    [Route("forgot")]
-    public async Task<ActionResult<User>> Forgot(ForgotBody body)
+    [Route("recover-password")]
+    public async Task<ActionResult<User>> Recover(RecoverPasswordBody body)
     {
       var selected = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.Email.Equals(body.Email));
       if (selected == null) return NotFound("Invalid username or email!");

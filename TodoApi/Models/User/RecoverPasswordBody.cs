@@ -1,6 +1,6 @@
 namespace Models
 {
-  public class ForgotBody
+  public class RecoverPasswordBody
   {
     public string Username { get; set; }
     public string Email { get; set; }
