@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification, Spin } from 'antd';
 import './App.css';
 import { useSelector } from 'react-redux';
 import { access_tokenSelector, loaderSelector } from './app/selector';
@@ -11,6 +11,7 @@ import UserInfo from './features/UserInfo';
 import ChangePassword from './features/ChangePassword';
 import { BASE_URL } from './app/config';
 import Home from './features/Home/index';
+import Register from './features/Register';
 
 function App() {
   const access_token = useSelector(access_tokenSelector);
@@ -21,7 +22,7 @@ function App() {
   const loader = useSelector(loaderSelector);
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
-    !access_token && navigate('/login');
+    !access_token && navigate('/register');
   }, [access_token, navigate]);
   useEffect(() => {
     const { message, description } = loader.error;
@@ -32,42 +33,45 @@ function App() {
       });
   }, [loader.error]);
   return (
-    <Routes>
-      <Route
-        path='/'
-        element={
-          <Sidebar>
-            <Home />
-          </Sidebar>
-        }
-      />
-      <Route
-        path='/user-info'
-        element={
-          <Sidebar>
-            <UserInfo />
-          </Sidebar>
-        }
-      />
-      <Route
-        path='/change-password'
-        element={
-          <Sidebar>
-            <ChangePassword />
-          </Sidebar>
-        }
-      />
-      <Route path='/login' element={<Login />} />
-      <Route element={Login} />
-      <Route
-        path='*'
-        element={
-          <main style={{ padding: '1rem' }}>
-            <p>There's nothing here!</p>
-          </main>
-        }
-      />
-    </Routes>
+    <Spin tip='Loading' spinning={loader.loading}>
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <Sidebar>
+              <Home />
+            </Sidebar>
+          }
+        />
+        <Route
+          path='/user-info'
+          element={
+            <Sidebar>
+              <UserInfo />
+            </Sidebar>
+          }
+        />
+        <Route
+          path='/change-password'
+          element={
+            <Sidebar>
+              <ChangePassword />
+            </Sidebar>
+          }
+        />
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
+        <Route element={Login} />
+        <Route
+          path='*'
+          element={
+            <main style={{ padding: '1rem' }}>
+              <p>There's nothing here!</p>
+            </main>
+          }
+        />
+      </Routes>
+    </Spin>
   );
 }
 

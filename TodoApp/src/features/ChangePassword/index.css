@@ -4,11 +4,6 @@
   height: 27px;
 }
 
-.main__spin__container {
-  display: flex;
-  justify-content: center;
-}
-
 .ant-input-group-wrapper {
   margin-bottom: 10px;
 }

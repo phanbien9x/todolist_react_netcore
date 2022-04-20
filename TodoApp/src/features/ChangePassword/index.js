@@ -1,4 +1,4 @@
-import './style.css';
+import './index.css';
 import React from 'react';
 import { Typography, Divider, Input, Button, Form } from 'antd';
 import { useDispatch } from 'react-redux';

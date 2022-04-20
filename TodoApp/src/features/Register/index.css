@@ -4,12 +4,12 @@
   height: 27px;
 }
 
-.login-form-forgot {
+.register-form-forgot {
   float: right;
 }
-.ant-col-rtl .login-form-forgot {
+.ant-col-rtl .register-form-forgot {
   float: left;
 }
-.login-form-button {
+.register-form-button {
   width: 100%;
 }
