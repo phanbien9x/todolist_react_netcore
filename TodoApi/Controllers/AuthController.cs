@@ -106,7 +106,7 @@ namespace TodoApi.Controllers
     // POST: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
-    /// Get verification code.
+    /// Get verification link to change password.
     /// </summary>
     [HttpPost]
     [Route("recover-password")]
@@ -120,13 +120,13 @@ namespace TodoApi.Controllers
       try
       {
         await _context.SaveChangesAsync();
-        _emailService.Send(body.Email, "You have a password reset request from TodoApi", $"Verification Code {code}");
+        _emailService.Send(body.Email, "You have a password reset request from TodoApi", $"Reset password link:\n http://localhost:3000/reset-password/{code}");
       }
       catch (Exception ex)
       {
         return Problem(ex.ToString());
       }
-      return Ok("Check your email to get Verification code");
+      return Ok("Check your email to get reset password link");
     }
 
     // PATCH: api/Auth
@@ -135,12 +135,12 @@ namespace TodoApi.Controllers
     /// Reset password by verification code.
     /// </summary>
     [HttpPatch]
-    [Route("reset-password")]
-    public async Task<ActionResult<User>> ResetPassword(ResetPasswordBody body)
+    [Route("reset-password/{code}")]
+    public async Task<ActionResult<User>> ResetPassword(string code, ResetPasswordBody body)
     {
-      var selected = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(body.Username) && o.VerificationCode.Equals(body.VerificationCode));
+      var selected = await _context.Users.FirstOrDefaultAsync(o => o.VerificationCode.Equals(code));
       if (selected == null) return NotFound("Invalid username or verification code!");
-      selected.Password = body.NewPassword;
+      selected.Password = this.hashPassword(body.NewPassword);
       selected.VerificationCode = null;
       _context.Entry(selected).State = EntityState.Modified;
       try
