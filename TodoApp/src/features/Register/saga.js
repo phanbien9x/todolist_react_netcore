@@ -8,8 +8,8 @@ function* register({ payload }) {
     const res = yield call(() => apiRegister(payload));
     yield put(REGISTER_SUCCESS(res.data));
     notification['success']({
-      message: '200',
-      description: "Register success!",
+      message: 'Register success',
+      description: "You can login now!",
     });
   } catch (error) {
     yield put(

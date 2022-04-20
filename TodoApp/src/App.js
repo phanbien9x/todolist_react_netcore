@@ -13,6 +13,7 @@ import { BASE_URL } from './app/config';
 import Home from './features/Home/index';
 import Register from './features/Register';
 import RecoverPassword from './features/RecoverPassword/index';
+import ResetPassword from './features/ResetPassword/index';
 
 function App() {
   const access_token = useSelector(access_tokenSelector);
@@ -23,7 +24,7 @@ function App() {
   const loader = useSelector(loaderSelector);
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
-    !['login', '/register', '/recover-password', '/reset-password'].includes(window.location.pathname) &&
+    !/\/((login)|(register)|(recover-password)|(reset-password.+))/.test(window.location.pathname) &&
       !access_token &&
       navigate('/login');
   }, [access_token, navigate]);
@@ -65,6 +66,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/recover-password' element={<RecoverPassword />} />
+        <Route path='/reset-password/:code' element={<ResetPassword />} />
         <Route element={Login} />
         <Route
           path='*'

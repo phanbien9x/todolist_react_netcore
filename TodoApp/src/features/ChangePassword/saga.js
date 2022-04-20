@@ -8,7 +8,7 @@ function* changePassword({ payload }) {
     const res = yield call(() => apiChangePassword(payload));
     yield put(CHANGE_PASSWORD_SUCCESS(res.data));
     notification['success']({
-      message: '200',
+      message: 'Password has been changed!',
       description: res.data,
     });
   } catch (error) {

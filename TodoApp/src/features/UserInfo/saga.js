@@ -29,8 +29,8 @@ function* changeUserInfo({ payload }) {
     const res = yield call(() => apiChangeUserInfo(payload));
     yield put(CHANGE_USERINFO_SUCCESS(res.data));
     notification['success']({
-      message: '200',
-      description: 'Update success',
+      message: 'Success',
+      description: 'Your information has been changed successfully!',
     });
   } catch (error) {
     yield put(
