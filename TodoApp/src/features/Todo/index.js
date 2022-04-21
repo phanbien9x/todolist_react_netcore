@@ -1,5 +1,5 @@
 import { CloseOutlined, EditOutlined } from '@ant-design/icons';
-import { Row, Tag, Checkbox, Button, DatePicker, Descriptions, Typography } from 'antd';
+import { Row, Tag, Checkbox, Button, Typography, Anchor } from 'antd';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO_DELETE_REQUEST, TODO_UPDATE_REQUEST } from './../TodoList/slice.js';
@@ -57,9 +57,12 @@ export default function Todo({
         justify='space-between'
         style={{ flex: 1, ...(checked ? { opacity: 0.5, textDecoration: 'line-through' } : {}) }}
       >
-        <Checkbox checked={checked} onChange={toggleCheckbox}>
-          {name}
-        </Checkbox>
+        <div>
+          <Checkbox checked={checked} onChange={toggleCheckbox}></Checkbox>
+          <a href={`/todo/${id}`} style={{ marginLeft: '5px' }}>
+            {name}
+          </a>
+        </div>
         <div style={{ display: 'flex' }}>
           <Text>{moment.utc(dueDate, 'YYYY/MM/DD').format('DD/MM/YYYY').toString()}</Text>
           <Tag color={priorityColorMapping[priority]} style={{ marginRight: 0, marginLeft: '5px' }}>
