@@ -4,6 +4,7 @@ using Datacontext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(TodoApiContext))]
-    partial class TodoApiContextModelSnapshot : ModelSnapshot
+    [Migration("20220421040252_AddFKToTodo")]
+    partial class AddFKToTodo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("TodoId");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("Attachment");
                 });
 
             modelBuilder.Entity("Models.Todo", b =>
@@ -95,9 +97,11 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Models.Attachment", b =>
                 {
-                    b.HasOne("Models.Todo", null)
+                    b.HasOne("Models.Todo", "Todo")
                         .WithMany("Attachments")
                         .HasForeignKey("TodoId");
+
+                    b.Navigation("Todo");
                 });
 
             modelBuilder.Entity("Models.Todo", b =>
