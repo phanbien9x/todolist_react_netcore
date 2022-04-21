@@ -33,7 +33,7 @@ const store = configureStore({
       thunk: false,
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        ignoredActionPaths: ['payload.data.dueDate'],
+        ignoredActionPaths: ['payload.data.dueDate, payload.dueDate'],
       },
     }).concat(sagaMiddleware),
 });

@@ -16,6 +16,7 @@ const TodoListSlice = createSlice({
       payload.name !== undefined && (current.name = payload.name);
       payload.priority !== undefined && (current.priority = payload.priority);
       payload.completed !== undefined && (current.completed = payload.completed);
+      payload.dueDate !== undefined && (current.dueDate = payload.dueDate);
     },
     TODO_DELETE_SUCCESS: (state, { payload }) => {
       return state.filter((item) => item.id !== payload.id);

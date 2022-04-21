@@ -1,10 +1,12 @@
 import { CloseOutlined, EditOutlined } from '@ant-design/icons';
-import { Row, Tag, Checkbox, Button, DatePicker } from 'antd';
+import { Row, Tag, Checkbox, Button, DatePicker, Descriptions, Typography } from 'antd';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO_DELETE_REQUEST, TODO_UPDATE_REQUEST } from './../TodoList/slice.js';
 import { todoListRemainSelector } from './../../app/selector.js';
 import moment from 'moment';
+
+const { Text } = Typography;
 
 const priorityColorMapping = {
   High: 'red',
@@ -12,11 +14,21 @@ const priorityColorMapping = {
   Low: 'gray',
 };
 
-export default function Todo({ id, name, priority, dueDate, completed, setName, setPriority, setBtnTxt, setSelected }) {
+export default function Todo({
+  id,
+  name,
+  priority,
+  dueDate,
+  completed,
+  setName,
+  setPriority,
+  setBtnTxt,
+  setSelected,
+  setDueDate,
+}) {
   const dispatch = useDispatch();
   const todoList = useSelector(todoListRemainSelector);
   const [checked, setChecked] = useState(completed);
-  const [date, setDate] = useState(dueDate);
   const toggleCheckbox = () => {
     dispatch(TODO_UPDATE_REQUEST({ id, data: { completed: !completed } }));
   };
@@ -26,6 +38,7 @@ export default function Todo({ id, name, priority, dueDate, completed, setName, 
     setPriority(priority);
     setBtnTxt('Adjust');
     setSelected(id);
+    setDueDate(dueDate);
   };
   const handleDeleteTodo = () => {
     dispatch(TODO_DELETE_REQUEST({ id }));
@@ -33,10 +46,6 @@ export default function Todo({ id, name, priority, dueDate, completed, setName, 
   useEffect(() => {
     setChecked(self.completed);
   }, [self.completed]);
-  const handleUpdateDueDate = (value) => {
-    setDate(value.toDate());
-    dispatch(TODO_UPDATE_REQUEST({ id, data: { dueDate: value.toDate() } }));
-  };
   return (
     <Row
       justify='space-between'
@@ -52,14 +61,8 @@ export default function Todo({ id, name, priority, dueDate, completed, setName, 
           {name}
         </Checkbox>
         <div style={{ display: 'flex' }}>
-          <DatePicker
-            onChange={handleUpdateDueDate}
-            size='small'
-            format='DD/MM/YYYY'
-            value={moment.utc(date, 'YYYY/MM/DD') || moment.utc()}
-            style={{ width: '105px' }}
-          />
-          <Tag color={priorityColorMapping[priority]} style={{ margin: 0 }}>
+          <Text>{moment.utc(dueDate, 'YYYY/MM/DD').format('DD/MM/YYYY').toString()}</Text>
+          <Tag color={priorityColorMapping[priority]} style={{ marginRight: 0, marginLeft: '5px' }}>
             {priority}
           </Tag>
         </div>

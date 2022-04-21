@@ -1,4 +1,4 @@
-import { Col, Row, Input, Button, Select, Tag } from 'antd';
+import { Col, Row, Input, Button, Select, Tag, DatePicker } from 'antd';
 import Todo from '../Todo/index.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { access_tokenSelector, todoListRemainSelector } from './../../app/selector.js';
@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { TODOLIST_ADD_REQUEST, TODOLIST_LISTING_REQUEST, TODO_UPDATE_REQUEST } from './slice.js';
 import { usePrevious } from './../../app/util.js';
 import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 
 export default function TodoList() {
   const access_token = useSelector(access_tokenSelector);
@@ -17,6 +18,7 @@ export default function TodoList() {
   const [btnTxt, setBtnTxt] = useState('Add');
   const [name, setName] = useState('');
   const [priority, setPriority] = useState('Medium');
+  const [dueDate, setDueDate] = useState(moment().utc());
   const [id, setSelected] = useState(null);
   const prevTodoListLength = usePrevious(todoList.length);
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function TodoList() {
             id: uuidv4(),
             name,
             priority,
+            dueDate,
             completed: false,
           })
         )
@@ -48,6 +51,7 @@ export default function TodoList() {
             data: {
               name,
               priority,
+              dueDate,
             },
           })
         );
@@ -68,6 +72,7 @@ export default function TodoList() {
               setPriority={setPriority}
               setBtnTxt={setBtnTxt}
               setSelected={setSelected}
+              setDueDate={setDueDate}
             />
           );
         })}
@@ -86,6 +91,16 @@ export default function TodoList() {
               <Tag color='gray'>Low</Tag>
             </Select.Option>
           </Select>
+          <DatePicker
+            onChange={(e) => {
+              setDueDate(e.toDate());
+            }}
+            value={moment.utc(dueDate, 'YYYY/MM/DD') || moment().utc()}
+            allowClear={false}
+            format='DD/MM/YYYY'
+            inputReadOnly={true}
+            style={{ width: '50px' }}
+          />
           <Button onClick={handleClickAdd} type='primary'>
             {btnTxt}
           </Button>
