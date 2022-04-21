@@ -37,6 +37,8 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<Todo>> GetTodo(string id)
     {
       var todo = await _context.Todos.FindAsync(id);
+      ICollection<Attachment> attachment = await _context.Attachments.Where(o => o.TodoId == id).ToListAsync();
+      todo.Attachments = attachment;
 
       if (todo == null)
       {
