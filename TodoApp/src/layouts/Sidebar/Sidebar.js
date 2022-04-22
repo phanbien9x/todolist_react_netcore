@@ -34,6 +34,33 @@ function Sidebar(props) {
     default:
       break;
   }
+  const items = [
+    {
+      key: 'home',
+      label: 'Home',
+      onClick: () => navigate('/'),
+      icon: <HomeOutlined />,
+    },
+    {
+      key: 'userinfo',
+      label: 'User informations',
+      onClick: () => navigate('/user-info'),
+      icon: <UserOutlined />,
+    },
+    {
+      key: 'changepassword',
+      label: 'Change password',
+      onClick: () => navigate('/change-password'),
+      icon: <KeyOutlined />,
+    },
+    {
+      key: 'logout',
+      label: 'Logout',
+      onClick: () => navigate('/'),
+      icon: <LogoutOutlined />,
+      className: 'sidebar__lastitem',
+    },
+  ];
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -43,20 +70,7 @@ function Sidebar(props) {
           setCollapsed(!collapsed);
         }}
       >
-        <Menu className='sidebar__list' theme='dark' defaultSelectedKeys={[pathname]} mode='inline'>
-          <Menu.Item onClick={() => navigate('/')} key='home' icon={<HomeOutlined />}>
-            Home
-          </Menu.Item>
-          <Menu.Item onClick={() => navigate('/user-info')} key='userinfo' icon={<UserOutlined />}>
-            User informations
-          </Menu.Item>
-          <Menu.Item onClick={() => navigate('/change-password')} key='changepassword' icon={<KeyOutlined />}>
-            Change password
-          </Menu.Item>
-          <Menu.Item onClick={handleClickLogout} className='sidebar__lastitem' key='4' icon={<LogoutOutlined />}>
-            Logout
-          </Menu.Item>
-        </Menu>
+        <Menu items={items} className='sidebar__list' theme='dark' defaultSelectedKeys={[pathname]} mode='inline' />
       </Sider>
       <Layout className='site-layout'>
         <Content style={{ margin: '0 16px' }}>{props.children}</Content>

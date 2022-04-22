@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Input, Button, Form, DatePicker, Select, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { TODO_DETAIL_REQUEST } from './slice';
+import { TODO_DETAIL_REQUEST, TODO_UPDATE_REQUEST } from './slice';
 import { useParams } from 'react-router-dom';
 import { todoDetailSelector } from './../../app/selector.js';
 import { Upload, Modal } from 'antd';
@@ -56,7 +56,17 @@ function TodoDetail(props) {
     </div>
   );
   const onFinish = (values) => {
-    console.log(values);
+    const { name, priority, dueDate } = values;
+    dispatch(
+      TODO_UPDATE_REQUEST({
+        id,
+        data: {
+          name,
+          priority,
+          dueDate: dueDate.toDate(),
+        },
+      })
+    );
   };
   return (
     <div
