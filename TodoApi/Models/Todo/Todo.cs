@@ -18,6 +18,7 @@ namespace Models
       if (data.Completed != null) this.Completed = data.Completed;
       if (data.DueDate != null) this.DueDate = data.DueDate;
     }
+    public string UserId { get; set; }
     public virtual ICollection<Attachment> Attachments { get; set; }
   }
 }
