@@ -14,6 +14,7 @@ import Home from './features/Home/index';
 import Register from './features/Register';
 import RecoverPassword from './features/RecoverPassword/index';
 import ResetPassword from './features/ResetPassword/index';
+import TodoDetail from './features/TodoDetail/index';
 
 function App() {
   const access_token = useSelector(access_tokenSelector);
@@ -44,6 +45,14 @@ function App() {
           element={
             <Sidebar>
               <Home />
+            </Sidebar>
+          }
+        />
+        <Route
+          path='/todo/:id'
+          element={
+            <Sidebar>
+              <TodoDetail />
             </Sidebar>
           }
         />

@@ -1,6 +1,7 @@
 import { all } from 'redux-saga/effects';
 import todoListSaga from './../features/TodoList/saga.js';
 import todoSaga from './../features/Todo/saga.js';
+import todoDetailSaga from './../features/TodoDetail/saga.js';
 import resetPasswordSaga from './../features/ResetPassword/saga.js';
 import recoverPasswordSaga from './../features/RecoverPassword/saga.js';
 import registerSaga from './../features/Register/saga.js';
@@ -16,6 +17,7 @@ export default function* rootSaga() {
     resetPasswordSaga(),
     todoListSaga(),
     todoSaga(),
+    todoDetailSaga(),
     userinfoSaga(),
     changePasswordSaga(),
   ]);

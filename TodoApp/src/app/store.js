@@ -4,6 +4,7 @@ import TodoListSlice from './../features/TodoList/slice.js';
 import LoginSlice from './../features/Login/slice.js';
 import LoaderSlice from './LoaderSlice.js';
 import UserInfoSlice from './../features/UserInfo/slice.js';
+import TodoDetailSlice from './../features/TodoDetail/slice.js';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './saga.js';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
@@ -26,6 +27,7 @@ const store = configureStore({
       loader: LoaderSlice,
       access_token: LoginSlice,
       userinfo: UserInfoSlice,
+      todoDetail: TodoDetailSlice,
     })
   ),
   middleware: (getDefaultMiddleware) =>
