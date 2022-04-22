@@ -174,6 +174,7 @@ namespace TodoApi.Controllers
     public async Task<ActionResult<Todo>> DeleteTodo(string id)
     {
       var todo = await _context.Todos.FindAsync(id);
+      ICollection<Attachment> attachments = await _context.Attachments.Where(o => o.TodoId == id).ToListAsync();
       if (todo == null)
       {
         return NotFound();
@@ -182,6 +183,10 @@ namespace TodoApi.Controllers
       _context.Todos.Remove(todo);
       try
       {
+        foreach (var attachment in attachments)
+        {
+          await DeleteAttachment(attachment.Id);
+        }
         await _context.SaveChangesAsync();
       }
       catch (Exception ex)
