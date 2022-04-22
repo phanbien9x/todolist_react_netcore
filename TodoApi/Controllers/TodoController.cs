@@ -13,13 +13,15 @@ namespace TodoApi.Controllers
   public class TodoController : ControllerBase
   {
     private readonly TodoApiContext _context;
+    private IWebHostEnvironment _environment;
 
-    public TodoController(TodoApiContext context)
+    public TodoController(TodoApiContext context, IWebHostEnvironment environment)
     {
       _context = context;
+      _environment = environment;
     }
 
-    // GET: api/Todo
+    // GET: api/todo
     /// <summary>
     /// Get multiple todo item.
     /// </summary>
@@ -29,7 +31,7 @@ namespace TodoApi.Controllers
       return await _context.Todos.OrderBy(o => o.DueDate).ToListAsync();
     }
 
-    // GET: api/Todo/5
+    // GET: api/todo/5
     /// <summary>
     /// Get a specific todo item.
     /// </summary>
@@ -48,7 +50,7 @@ namespace TodoApi.Controllers
       return todo;
     }
 
-    // PATCH: api/Todo/5
+    // PATCH: api/todo/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
     /// Update a specific todo item.
@@ -74,7 +76,69 @@ namespace TodoApi.Controllers
       return selectedTodo;
     }
 
-    // POST: api/Todo
+    // POST: api/todo/attachment
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Upload a todo's attachment
+    /// </summary>
+    [HttpPost]
+    [Route("{id}/attachment")]
+    public async Task<ActionResult<Attachment>> PostAttachment(string id, IFormFile file)
+    {
+      var selectedTodo = await _context.Todos.FindAsync(id);
+      if (selectedTodo == null) return NotFound();
+      DateTimeOffset now = (DateTimeOffset)DateTime.UtcNow;
+      string newFileName = now.ToString("dd-MM-yyyy-HH-mm-ss__") + file.FileName;
+      var filePath = Path.GetFullPath(@$"{_environment.ContentRootPath}/Upload/{newFileName}");
+      Attachment attachment = new Attachment(Guid.NewGuid().ToString(), newFileName, selectedTodo.Id);
+      try
+      {
+        if (file.Length > 0)
+        {
+          using (var stream = System.IO.File.Create(filePath))
+          {
+            await file.CopyToAsync(stream);
+          }
+        }
+        _context.Attachments.Add(attachment);
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        System.IO.File.Delete(filePath);
+        return Problem(ex.ToString());
+      }
+
+      return Ok(attachment);
+    }
+
+    // DELETE: api/todo/attachment
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
+    /// Delete a todo's attachment
+    /// </summary>
+    [HttpDelete]
+    [Route("attachment/{id}")]
+    public async Task<ActionResult<Todo>> DeleteAttachment(string id)
+    {
+      Attachment selectedAttachment = await _context.Attachments.FindAsync(id);
+      if (selectedAttachment == null) return NotFound();
+      _context.Attachments.Remove(selectedAttachment);
+      string filePath = Path.GetFullPath(@$"{_environment.ContentRootPath}/Upload/{selectedAttachment.Name}");
+      try
+      {
+        await _context.SaveChangesAsync();
+        System.IO.File.Delete(filePath);
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+
+      return Ok("Attachment has been deleted!");
+    }
+
+    // POST: api/todo
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
     /// Add new Todo item.
@@ -102,7 +166,7 @@ namespace TodoApi.Controllers
       return CreatedAtAction("GetTodo", new { id = todo.Id }, todo);
     }
 
-    // DELETE: api/Todo/5
+    // DELETE: api/todo/5
     /// <summary>
     /// Delete a specific todo item.
     /// </summary>
