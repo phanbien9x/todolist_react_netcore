@@ -9,7 +9,7 @@ import Sidebar from './layouts/Sidebar/Sidebar';
 import Login from './features/Login';
 import UserInfo from './features/UserInfo';
 import ChangePassword from './features/ChangePassword';
-import { BASE_URL } from './app/config';
+import { API_URL } from './app/config';
 import Home from './features/Home/index';
 import Register from './features/Register';
 import RecoverPassword from './features/RecoverPassword/index';
@@ -18,7 +18,7 @@ import TodoDetail from './features/TodoDetail/index';
 
 function App() {
   const access_token = useSelector(access_tokenSelector);
-  axios.defaults.baseURL = BASE_URL;
+  axios.defaults.baseURL = API_URL;
   axios.defaults.headers.post['Content-Type'] = 'Content-Type application/x-www-form-urlencoded';
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   let navigate = useNavigate();

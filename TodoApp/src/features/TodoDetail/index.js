@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Input, Button, Form, DatePicker, Select, Tag } from 'antd';
+import { Typography, Input, Button, Form, DatePicker, Select, Tag, notification } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { TODO_DETAIL_REQUEST, TODO_UPDATE_REQUEST } from './slice';
 import { useParams } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { todoDetailSelector } from './../../app/selector.js';
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { apiUploadAttachment, apiDeleteAttachment } from './api';
 
 const { Title, Text } = Typography;
 
@@ -19,7 +20,7 @@ function getBase64(file) {
   });
 }
 
-function TodoDetail(props) {
+function TodoDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const todoDetail = useSelector(todoDetailSelector);
@@ -68,6 +69,45 @@ function TodoDetail(props) {
       })
     );
   };
+  const uploadAttachment = async (options) => {
+    const { onSuccess, onError, file } = options;
+
+    const data = new FormData();
+    data.append('file', file);
+    try {
+      const res = await apiUploadAttachment({ id, data });
+      onSuccess(res.data);
+      console.log(options);
+      notification['success']({
+        message: 'Success',
+        description: 'Attachment upload complete!',
+      });
+    } catch (err) {
+      onError();
+      notification['error']({
+        message: 'Error',
+        description: err.toString(),
+      });
+    }
+  };
+
+  const deleteAttachment = async (options) => {
+    options?.response?.id && (options.id = options.response.id);
+    const { id } = options;
+    try {
+      const res = await apiDeleteAttachment(id);
+      notification['success']({
+        message: 'Success',
+        description: res.data,
+      });
+    } catch (err) {
+      notification['error']({
+        message: 'Error',
+        description: err.toString(),
+      });
+    }
+  };
+
   return (
     <div
       style={{
@@ -119,7 +159,12 @@ function TodoDetail(props) {
           <DatePicker allowClear={false} format='DD/MM/YYYY' inputReadOnly={true} />
         </Form.Item>
         <Form.Item label='Upload' name='upload' valuePropName='fileList' getValueFromEvent={handleChange}>
-          <Upload listType='picture-card' onPreview={handlePreview}>
+          <Upload
+            customRequest={uploadAttachment}
+            onRemove={deleteAttachment}
+            listType='picture-card'
+            onPreview={handlePreview}
+          >
             {upload?.length >= 3 ? null : uploadButton}
           </Upload>
         </Form.Item>
