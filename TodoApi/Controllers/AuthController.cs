@@ -198,6 +198,32 @@ namespace TodoApi.Controllers
     // POST: api/Auth
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     /// <summary>
+    /// Update device token.
+    /// </summary>
+    [HttpPatch]
+    [Route("update-fcm-token")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult> UpdateFcmToken(string token)
+    {
+      string username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var userinfo = await _context.Users.FindAsync(username);
+      if (userinfo == null) return NotFound("Invalid username!");
+      userinfo.Fcm_token = token;
+      _context.Entry(userinfo).State = EntityState.Modified;
+      try
+      {
+        await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+        return Problem(ex.ToString());
+      }
+      return Ok("FCM token has been updated!");
+    }
+
+    // POST: api/Auth
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    /// <summary>
     /// Login to get access token.
     /// </summary>
     [HttpGet]
@@ -209,6 +235,7 @@ namespace TodoApi.Controllers
       var userinfo = await _context.Users.FindAsync(username);
       if (userinfo == null) return NotFound("Invalid username!");
       userinfo.Access_token = null;
+      userinfo.Fcm_token = null;
       _context.Entry(userinfo).State = EntityState.Modified;
       try
       {
