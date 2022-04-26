@@ -77,7 +77,6 @@ function TodoDetail() {
     try {
       const res = await apiUploadAttachment({ id, data });
       onSuccess(res.data);
-      console.log(options);
       notification['success']({
         message: 'Success',
         description: 'Attachment upload complete!',

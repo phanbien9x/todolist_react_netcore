@@ -14,9 +14,6 @@ function Sidebar(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const access_token = useSelector(access_tokenSelector);
-  const handleClickLogout = () => {
-    dispatch(LOGOUT_REQUEST());
-  };
   useEffect(() => {
     !access_token && navigate('/login');
   }, [access_token, navigate]);
@@ -56,7 +53,9 @@ function Sidebar(props) {
     {
       key: 'logout',
       label: 'Logout',
-      onClick: () => navigate('/'),
+      onClick: () => {
+        dispatch(LOGOUT_REQUEST());
+      },
       icon: <LogoutOutlined />,
       className: 'sidebar__lastitem',
     },

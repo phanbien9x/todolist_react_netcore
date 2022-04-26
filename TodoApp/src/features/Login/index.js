@@ -1,29 +1,12 @@
-import { Typography, notification, Form, Input, Button, Checkbox } from 'antd';
+import { Typography, Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './index.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { loaderSelector, access_tokenSelector } from './../../app/selector.js';
+import { useDispatch } from 'react-redux';
 import { LOGIN_REQUEST } from './slice.js';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 const { Title } = Typography;
 
 function Login() {
-  let navigate = useNavigate();
   const dispatch = useDispatch();
-  const loader = useSelector(loaderSelector);
-  const access_token = useSelector(access_tokenSelector);
-  useEffect(() => {
-    const { message, description } = loader.error;
-    (loader.error.message !== null || loader.error.description !== null) &&
-      notification['error']({
-        message,
-        description,
-      });
-  }, [loader.error]);
-  useEffect(() => {
-    access_token && navigate('/');
-  }, [access_token, navigate]);
   const onFinish = (values) => {
     dispatch(LOGIN_REQUEST(values));
   };

@@ -15,6 +15,16 @@ import Register from './features/Register';
 import RecoverPassword from './features/RecoverPassword/index';
 import ResetPassword from './features/ResetPassword/index';
 import TodoDetail from './features/TodoDetail/index';
+import { onMessage } from 'firebase/messaging';
+import { getFCMToken, messaging } from './app/firebase_initial';
+
+getFCMToken();
+onMessage(messaging, (payload) => {
+  notification['warning']({
+    message: payload.notification.title,
+    description: payload.notification.body,
+  });
+});
 
 function App() {
   const access_token = useSelector(access_tokenSelector);
@@ -25,9 +35,11 @@ function App() {
   const loader = useSelector(loaderSelector);
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
-    !/\/((login)|(register)|(recover-password)|(reset-password.+))/.test(window.location.pathname) &&
-      !access_token &&
-      navigate('/login');
+    if (!/\/((login)|(register)|(recover-password)|(reset-password.+))/.test(window.location.pathname)) {
+      !access_token && navigate('/login');
+    } else {
+      access_token && navigate('/');
+    }
   }, [access_token, navigate]);
   useEffect(() => {
     const { message, description } = loader.error;
