@@ -23,7 +23,7 @@ function* login({ payload }) {
     yield put(
       LOGIN_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }
@@ -37,8 +37,8 @@ function* logout({ payload }) {
   } catch (error) {
     yield put(
       LOGOUT_FAILURE({
-        message: error?.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        message: error.response?.status,
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }

@@ -18,7 +18,7 @@ function* getUserInfo() {
     yield put(
       GET_USERINFO_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }
@@ -36,7 +36,7 @@ function* changeUserInfo({ payload }) {
     yield put(
       CHANGE_USERINFO_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }

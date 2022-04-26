@@ -26,7 +26,7 @@ function* todoDetail({ payload }) {
     yield put(
       TODO_DETAIL_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }
@@ -43,7 +43,7 @@ function* updateTodo({ payload }) {
     yield put(
       TODO_UPDATE_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }

@@ -16,7 +16,7 @@ function* todoList_Listing() {
     yield put(
       TODOLIST_LISTING_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }
@@ -30,7 +30,7 @@ function* todoList_Add({ payload }) {
     yield put(
       TODOLIST_ADD_FAILURE({
         message: error.response?.status,
-        description: error.response ? error.response.data : error.toString(),
+        description: error.response ? (typeof error.response.data === 'string' ? error.response.data : error.response.data.detail) : error.toString(),
       })
     );
   }
