@@ -6,6 +6,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.Extensions.FileProviders;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+
+FirebaseApp.Create(new AppOptions()
+{
+  Credential = GoogleCredential.FromFile("service-account-file.json"),
+});
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>

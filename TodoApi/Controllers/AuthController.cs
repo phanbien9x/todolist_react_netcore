@@ -9,6 +9,7 @@ using System.Text;
 using Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FirebaseAdmin.Messaging;
 
 namespace TodoApi.Controllers
 {
@@ -100,6 +101,21 @@ namespace TodoApi.Controllers
       {
         return Problem(ex.ToString());
       }
+      var registrationToken = "dujK3AjOQqv99PPVWz0FUF:APA91bGcJOn2YAHZ82pYrooKNzk0hnCp6UgU9Fr8SOZxbya4hQiGm_cERCsW_3JIld3gcNbA72JGDvGzetak9uChHZlgx-wgcqmJhQrvN2DmiqJu3hw0cXTD-8hhyji95zJqMML5RibB";
+      var message = new Message()
+      {
+        Data = new Dictionary<string, string>()
+        {
+          { "myData", "1337" },
+        },
+        Token = registrationToken,
+        Notification = new Notification()
+        {
+          Title = "Test from code",
+          Body = "Here is your test!"
+        }
+      };
+      string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
       return Ok(UserResponse.getDataFrom(userinfo));
     }
 

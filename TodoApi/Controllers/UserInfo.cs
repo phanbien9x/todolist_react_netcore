@@ -15,8 +15,6 @@ namespace TodoApi.Controllers
   {
     private readonly IConfiguration _configuration;
     private readonly TodoApiContext _context;
-    private readonly EmailService _emailService;
-
     public UserInfoController(TodoApiContext context, IConfiguration configuration)
     {
       _context = context;
