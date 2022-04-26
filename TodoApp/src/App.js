@@ -18,7 +18,6 @@ import TodoDetail from './features/TodoDetail/index';
 import { onMessage } from 'firebase/messaging';
 import { getFCMToken, messaging } from './app/firebase_initial';
 
-getFCMToken();
 onMessage(messaging, (payload) => {
   notification['warning']({
     message: payload.notification.title,
@@ -35,10 +34,10 @@ function App() {
   const loader = useSelector(loaderSelector);
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
-    if (!/\/((login)|(register)|(recover-password)|(reset-password.+))/.test(window.location.pathname)) {
-      !access_token && navigate('/login');
-    } else {
+    if (/\/((login)|(register)|(recover-password)|(reset-password.+))/.test(window.location.pathname)) {
       access_token && navigate('/');
+    } else {
+      access_token ? getFCMToken() : navigate('/login');
     }
   }, [access_token, navigate]);
   useEffect(() => {

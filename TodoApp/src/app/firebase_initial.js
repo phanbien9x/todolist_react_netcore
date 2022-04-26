@@ -1,5 +1,7 @@
+import axios from 'axios';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
+import { notification } from 'antd';
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_APIKEY,
@@ -19,6 +21,16 @@ export const getFCMToken = () => {
     .then((currentToken) => {
       if (currentToken) {
         console.log(currentToken);
+        axios.patch(`/update-fcm-token?token=${currentToken}`).catch((error) => {
+          notification['error']({
+            message: error.response?.status,
+            description: error.response
+              ? typeof error.response.data === 'string'
+                ? error.response.data
+                : error.response.data.detail
+              : error.toString(),
+          });
+        });
       } else {
         console.log('No registration token available. Request permission to generate one.');
       }
