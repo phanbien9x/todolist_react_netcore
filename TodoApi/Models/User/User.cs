@@ -13,6 +13,7 @@ namespace Models
     public string VerificationCode { get; set; }
     public string GoogleId { get; set; }
     public string FacebookId { get; set; }
+    public string Fcm_token { get; set; }
     public void getDataFrom(LoginBody data)
     {
       if (data.Username != null) this.Username = data.Username;
