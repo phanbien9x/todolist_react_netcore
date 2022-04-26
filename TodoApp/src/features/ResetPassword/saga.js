@@ -15,8 +15,8 @@ function* resetPassword({ payload }) {
   } catch (error) {
     yield put(
       RESET_PASSWORD_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }

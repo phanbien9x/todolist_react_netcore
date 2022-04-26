@@ -17,8 +17,8 @@ function* getUserInfo() {
   } catch (error) {
     yield put(
       GET_USERINFO_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }
@@ -35,8 +35,8 @@ function* changeUserInfo({ payload }) {
   } catch (error) {
     yield put(
       CHANGE_USERINFO_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }

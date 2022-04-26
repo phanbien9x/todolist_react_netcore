@@ -15,8 +15,8 @@ function* todoList_Listing() {
   } catch (error) {
     yield put(
       TODOLIST_LISTING_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }
@@ -29,8 +29,8 @@ function* todoList_Add({ payload }) {
   } catch (error) {
     yield put(
       TODOLIST_ADD_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }

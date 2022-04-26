@@ -16,8 +16,8 @@ function* todo_Update({ payload }) {
   } catch (error) {
     yield put(
       TODO_UPDATE_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }
@@ -30,8 +30,8 @@ function* todo_Delete({ payload }) {
   } catch (error) {
     yield put(
       TODO_DELETE_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }

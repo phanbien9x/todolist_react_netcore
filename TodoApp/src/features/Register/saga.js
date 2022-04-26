@@ -14,8 +14,8 @@ function* register({ payload }) {
   } catch (error) {
     yield put(
       REGISTER_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }

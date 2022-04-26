@@ -25,8 +25,8 @@ function* todoDetail({ payload }) {
   } catch (error) {
     yield put(
       TODO_DETAIL_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }
@@ -42,8 +42,8 @@ function* updateTodo({ payload }) {
   } catch (error) {
     yield put(
       TODO_UPDATE_FAILURE({
-        message: error.response.status,
-        description: error.response.data !== '' ? error.response.data : error.response.statusText,
+        message: error.response?.status,
+        description: error.response ? error.response.data : error.toString(),
       })
     );
   }
