@@ -10,7 +10,7 @@ namespace Models
     public string Name { get; set; }
     public string Priority { get; set; }
     public bool? Completed { get; set; }
-    public DateTime? DueDate { get; set; } = DateTime.Today;
+    public DateTime DueDate { get; set; } = DateTime.Today;
     public void getDataFrom(TodoBody data)
     {
       if (data.Name != null) this.Name = data.Name;
