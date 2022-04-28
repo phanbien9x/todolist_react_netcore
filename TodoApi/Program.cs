@@ -8,6 +8,8 @@ using System.Reflection;
 using Microsoft.Extensions.FileProviders;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Hangfire;
+using Hangfire.SqlServer;
 
 FirebaseApp.Create(new AppOptions()
 {
@@ -38,6 +40,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
   };
 });
+// Add Hangfire services.
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("Hangfire_TodoApiDatabase"), new SqlServerStorageOptions
+    {
+      CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+      SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+      QueuePollInterval = TimeSpan.Zero,
+      UseRecommendedIsolationLevel = true,
+      DisableGlobalLocks = true
+    }));
+
+// Add the processing server as IHostedService
+builder.Services.AddHangfireServer();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoApiContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TodoApiDatabase")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -109,6 +127,8 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseCors("MyPolicy");
 app.UseAuthorization();
 app.UseAuthentication();
+
+app.UseHangfireDashboard();
 
 app.MapControllers();
 
