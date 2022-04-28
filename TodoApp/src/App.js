@@ -17,14 +17,12 @@ import ResetPassword from './features/ResetPassword/index';
 import TodoDetail from './features/TodoDetail/index';
 import { onMessage } from 'firebase/messaging';
 import { getFCMToken, messaging } from './app/firebase_initial';
+import { v4 as uuidv4 } from 'uuid';
 
-onMessage(messaging, (payload) => {
-  notification['warning']({
-    message: payload.notification.title,
-    description: payload.notification.body,
-  });
+notification.config({
+  placement: 'topRight',
+  duration: 0,
 });
-
 function App() {
   const access_token = useSelector(access_tokenSelector);
   axios.defaults.baseURL = API_URL;
@@ -32,6 +30,20 @@ function App() {
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   let navigate = useNavigate();
   const loader = useSelector(loaderSelector);
+  onMessage(messaging, (payload) => {
+    console.log(payload);
+    const key = uuidv4();
+    notification['warning']({
+      key,
+      message: payload.notification.title,
+      description: payload.notification.body,
+      onClick: () => {
+        notification.close(key);
+        payload.data.type === 'todoExpired' && navigate(`/todo/${payload.data.id}`);
+      },
+    });
+  });
+
   axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
   useEffect(() => {
     if (/\/((login)|(register)|(recover-password)|(reset-password.+))/.test(window.location.pathname)) {

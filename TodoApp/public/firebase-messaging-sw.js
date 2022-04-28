@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
 importScripts('https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.6.11/firebase-messaging-compat.js');
 
@@ -18,10 +20,9 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png',
+    body: payload.notification.body,
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
