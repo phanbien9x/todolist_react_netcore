@@ -10,6 +10,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
 using Hangfire.SqlServer;
+using TodoApi.ScopedServices;
 
 FirebaseApp.Create(new AppOptions()
 {
@@ -56,6 +57,7 @@ builder.Services.AddHangfire(configuration => configuration
 
 // Add the processing server as IHostedService
 builder.Services.AddHangfireServer();
+builder.Services.AddScoped<ScopedNotify>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoApiContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TodoApiDatabase")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

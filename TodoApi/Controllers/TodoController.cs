@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Datacontext;
 using Models;
 using System.Security.Claims;
+using TodoApi.ScopedServices;
+using Hangfire;
 
 namespace TodoApi.Controllers
 {
@@ -15,10 +17,12 @@ namespace TodoApi.Controllers
   {
     private readonly TodoApiContext _context;
     private IWebHostEnvironment _environment;
+    private ScopedNotify _scopedNotify;
 
-    public TodoController(TodoApiContext context, IWebHostEnvironment environment)
+    public TodoController(TodoApiContext context, IWebHostEnvironment environment, ScopedNotify scopedNotify)
     {
       _context = context;
+      _scopedNotify = scopedNotify;
       _environment = environment;
     }
 
@@ -62,18 +66,19 @@ namespace TodoApi.Controllers
     /// Update a specific todo item.
     /// </summary>
     [HttpPatch("{id}")]
-    public async Task<ActionResult<Todo>> PatchTodo(string id, TodoBody todo)
+    public async Task<ActionResult<Todo>> PatchTodo(string id, TodoBody body)
     {
       var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
       var selectedTodo = await _context.Todos.FirstOrDefaultAsync(o => o.UserId == userinfo.Username && o.Id == id);
       if (selectedTodo == null) return NotFound();
-
-      selectedTodo.getDataFrom(todo);
+      bool dueDateChanged = selectedTodo.DueDate != body.DueDate;
+      selectedTodo.getDataFrom(body);
       _context.Entry(selectedTodo).State = EntityState.Modified;
 
       try
       {
         await _context.SaveChangesAsync();
+        if (dueDateChanged) { await _scopedNotify.reScheduleNotifyTodo(selectedTodo); }
       }
       catch (Exception ex)
       {
@@ -156,15 +161,18 @@ namespace TodoApi.Controllers
     [HttpPost]
     public async Task<ActionResult<Todo>> PostTodo(TodoBody body)
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+      //User.Identity.Name;
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      //var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(username));
       Todo newTodo = new Todo();
       newTodo.getDataFrom(body);
       newTodo.Id = Guid.NewGuid().ToString();
-      newTodo.UserId = userinfo.Username;
+      newTodo.UserId = username;
       _context.Todos.Add(newTodo);
       try
       {
         await _context.SaveChangesAsync();
+        await _scopedNotify.scheduleNotifyTodo(newTodo);
       }
       catch (Exception ex)
       {
@@ -204,6 +212,7 @@ namespace TodoApi.Controllers
           await DeleteAttachment(attachment.Id);
         }
         await _context.SaveChangesAsync();
+        BackgroundJob.Delete(todo.JobId);
       }
       catch (Exception ex)
       {
