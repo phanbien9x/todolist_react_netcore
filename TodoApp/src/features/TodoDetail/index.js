@@ -155,7 +155,7 @@ function TodoDetail() {
           </Select>
         </Form.Item>
         <Form.Item label='DueDate' name='dueDate'>
-          <DatePicker showTime allowClear={false} format='HH:mm:ss' inputReadOnly={true} />
+          <DatePicker showTime allowClear={false} format='HH:mm:ss - DD/MM/YYYY' inputReadOnly={true} />
         </Form.Item>
         <Form.Item label='Upload' name='upload' valuePropName='fileList' getValueFromEvent={handleChange}>
           <Upload
