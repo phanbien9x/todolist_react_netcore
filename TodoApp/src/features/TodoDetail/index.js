@@ -130,7 +130,7 @@ function TodoDetail() {
         initialValues={{
           name: todoDetail.name,
           priority: todoDetail.priority,
-          dueDate: moment.utc(todoDetail.dueDate, 'YYYY/MM/DD'),
+          dueDate: moment.utc(todoDetail.dueDate),
           upload: todoDetail.attachments,
         }}
         form={form}
@@ -155,7 +155,7 @@ function TodoDetail() {
           </Select>
         </Form.Item>
         <Form.Item label='DueDate' name='dueDate'>
-          <DatePicker allowClear={false} format='DD/MM/YYYY' inputReadOnly={true} />
+          <DatePicker showTime allowClear={false} format='HH:mm:ss' inputReadOnly={true} />
         </Form.Item>
         <Form.Item label='Upload' name='upload' valuePropName='fileList' getValueFromEvent={handleChange}>
           <Upload

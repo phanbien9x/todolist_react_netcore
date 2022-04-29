@@ -92,12 +92,13 @@ export default function TodoList() {
             </Select.Option>
           </Select>
           <DatePicker
+            showTime
             onChange={(e) => {
               setDueDate(e.toDate());
             }}
-            value={moment.utc(dueDate, 'YYYY/MM/DD') || moment().utc()}
+            value={moment.utc(dueDate) || moment().utc()}
             allowClear={false}
-            format='DD/MM/YYYY'
+            format='HH:mm:ss'
             inputReadOnly={true}
             style={{ width: '50px' }}
           />
