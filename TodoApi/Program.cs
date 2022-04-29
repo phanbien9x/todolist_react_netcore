@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
   options.AddPolicy(name: "MyPolicy",
     policy =>
     {
-      policy.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+      policy.WithOrigins("https://test-redux-saga.herokuapp.com").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
