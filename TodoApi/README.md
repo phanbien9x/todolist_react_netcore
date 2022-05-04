@@ -1,3 +1,21 @@
+Build basic netcore web api:
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-6.0&tabs=visual-studio
+
+Authentication (Bearer token)
+https://docs.microsoft.com/en-us/aspnet/core/signalr/authn-and-authz?view=aspnetcore-6.0
+
+Enable cors
+https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0
+
+Add swagger document
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&tabs=visual-studio
+
+Background service (Hangfire)
+https://www.hangfire.io/
+
+Deploy web app to azure with database
+https://docs.microsoft.com/en-us/azure/app-service/tutorial-dotnetcore-sqldb-app?tabs=azure-portal%2Cvisualstudio-deploy%2Cdeploy-instructions-azure-portal%2Cazure-portal-logs%2Cazure-portal-resources
+
 <h1>Todolist webapi with netcore framework:</h1>
 <h3>1. Technical:</h3>
 
