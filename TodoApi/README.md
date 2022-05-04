@@ -1,5 +1,5 @@
 <h1>Todolist webapi with netcore framework:</h1>
-   <h3>1. Technical:</h3>
+<h3>1. Technical:</h3>
 
 - Netcore framework
 - Entity framework
@@ -228,11 +228,76 @@
     app.UseCors("MyPolicy");
   ```
 
-  <h3>6. Additional part</h3>
+<h3>6. Additional part</h3>
 
   - Create SMPT server to send email
-  - Login with outh
-  <h3>7. Deploy to azure web service</h3>
+  - Login with auth
+<h3>7. Show file in physical path without authenticate</h3>
+
+  ```c#
+  app.UseStaticFiles(new StaticFileOptions
+  {
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Upload")),
+    RequestPath = "/attachment"
+  });
+  ```
+<h3>8. Firebase clound messaging</h3>
+
+  - Add config to program.cs
+    ```c#
+    FirebaseApp.Create(new AppOptions() {
+      Credential = GoogleCredential.FromFile("service-account-file.json"),
+    });
+    ```
+  - Send notification
+    ```c#
+    var message = new Message()
+      {
+        Data = new Dictionary<string, string>()
+      {
+        { "id", todo.Id },
+        { "type", "todoExpired" },
+      },
+        Token = token,
+        Notification = new Notification()
+        {
+          Title = "Todo expired!",
+          Body = $"You forgot {todo.Name} check it now!",
+        },
+        Webpush = new WebpushConfig()
+        {
+          FcmOptions = new WebpushFcmOptions()
+          {
+            Link = $"https://localhost:3000/todo/{todo.Id}"
+          }
+        }
+      };
+      await FirebaseMessaging.DefaultInstance.SendAsync(message);
+    ```
+<h3>9. Background service (Hangfire)</h3>
+
+  - Install packages: Hangfire.AspNetCore, Hangfire.Core, Hangfire.SqlServer
+  - Add hangfire service to program.cs
+    ```c#
+    builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("TodoApiDatabase"), new SqlServerStorageOptions
+    {
+      CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+      SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+      QueuePollInterval = TimeSpan.Zero,
+      UseRecommendedIsolationLevel = true,
+      DisableGlobalLocks = true
+    }));
+    builder.Services.AddHangfireServer();
+    builder.Services.AddScoped<ScopedNotify>();
+    ...
+    app.UseHangfireDashboard();
+    ```
+
+<h3>10. Deploy to azure web service</h3>
 
   - Create the App Service
 
