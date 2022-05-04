@@ -32,7 +32,6 @@ function* login({ payload }) {
 function* logout({ payload }) {
   try {
     yield call(() => apiLogout(payload));
-    yield put(LOGOUT_SUCCESS(null));
     storage.removeItem('persist:root') && persistor.pause();
   } catch (error) {
     yield put(
@@ -42,6 +41,7 @@ function* logout({ payload }) {
       })
     );
   }
+  yield put(LOGOUT_SUCCESS(null));
 }
 
 export default function* todoListSaga() {
