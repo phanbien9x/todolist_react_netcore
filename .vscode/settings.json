@@ -1,3 +1,5 @@
 {
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "appService.defaultWebAppToDeploy": "/subscriptions/9265b008-e185-4420-8965-eecd7f756140/resourceGroups/andy-todoapi/providers/Microsoft.Web/sites/andy-todoapi",
+  "appService.deploySubpath": "TodoApi\\bin\\Release\\net6.0\\publish"
 }

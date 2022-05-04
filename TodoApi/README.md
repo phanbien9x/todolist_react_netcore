@@ -230,5 +230,30 @@
 
   <h3>6. Additional part</h3>
 
-    - Create SMPT server to send email
-    - Login with outh
+  - Create SMPT server to send email
+  - Login with outh
+  <h3>7. Deploy to azure web service</h3>
+
+  - Create the App Service
+
+    ```azurecli
+    az group create --location eastus --name andy-todoapi
+
+    az appservice plan create --name andy-todoapi-plan-123 --resource-group andy-todoapi --sku F1
+
+    az webapp create --name andy-todoapi --runtime "DOTNET|6.0" --plan andy-todoapi-plan-123 --resource-group andy-todoapi
+
+    az sql server create --location eastus --resource-group andy-todoapi --name andy-todoapi --admin-user andy --admin-password admin@123
+
+    az sql db create --resource-group andy-todoapi --server andy-todoapi --name TodoApi
+
+    az sql server firewall-rule create --resource-group andy-todoapi --server andy-todoapi --name AzureAccess --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+
+    az sql db show-connection-string --client ado.net --name TodoApi --server andy-todoapi
+
+    az webapp config connection-string set -g andy-todoapi -n andy-todoapi -t SQLServer --settings TodoApiDatabase="Server=tcp:andy-todoapi.database.windows.net,1433;Database=TodoApi;User ID=andy;Password=admin@123;Encrypt=true;Connection Timeout=30;"
+
+    az sql server firewall-rule create --resource-group andy-todoapi --server andy-todoapi --name LocalAccess --start-ip-address 118.70.52.28 --end-ip-address 118.70.52.28
+
+    dotnet ef database update
+    ```
