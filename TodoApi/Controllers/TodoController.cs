@@ -170,14 +170,7 @@ namespace TodoApi.Controllers
       }
       catch (Exception ex)
       {
-        if (TodoExists(newTodo.Id))
-        {
-          return Conflict();
-        }
-        else
-        {
-          return Problem(ex.ToString());
-        }
+        return Problem(ex.ToString());
       }
 
       return CreatedAtAction("GetTodo", new { id = newTodo.Id }, newTodo);
@@ -214,11 +207,6 @@ namespace TodoApi.Controllers
       }
 
       return todo;
-    }
-
-    private bool TodoExists(string id)
-    {
-      return _context.Todos.Any(e => e.Id == id);
     }
   }
 }

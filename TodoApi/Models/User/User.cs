@@ -25,6 +25,5 @@ namespace Models
       if (data.Password != null) this.Password = data.Password;
       if (data.Email != null) this.Email = data.Email;
     }
-    public virtual ICollection<Todo> Todos { get; set; }
   }
 }
