@@ -72,7 +72,7 @@ namespace TodoApi.ScopedServices
         {
           FcmOptions = new WebpushFcmOptions()
           {
-            Link = $"https://localhost:3000/todo/{todo.Id}"
+            Link = $"https://test-redux-saga.herokuapp.com/todo/{todo.Id}"
           }
         }
       };

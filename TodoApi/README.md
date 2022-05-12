@@ -286,7 +286,7 @@ https://docs.microsoft.com/en-us/azure/app-service/tutorial-dotnetcore-sqldb-app
         {
           FcmOptions = new WebpushFcmOptions()
           {
-            Link = $"https://localhost:3000/todo/{todo.Id}"
+            Link = $"https://test-redux-saga.herokuapp.com/todo/{todo.Id}"
           }
         }
       };
