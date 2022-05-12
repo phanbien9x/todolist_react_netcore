@@ -27,7 +27,7 @@ namespace TodoApi.ScopedServices
     }
     public async Task<string> scheduleNotify(Todo todo)
     {
-      string token = await this.RetrieveFcmToken(todo.UserId);
+      string token = await this.RetrieveFcmToken(todo.Username);
       return BackgroundJob.Schedule(() => fcmTo(token, todo), todo.DueDate);
     }
     public async Task updateJobId(string jobId, string todoId)

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TodoApi.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,14 +38,14 @@ namespace TodoApi.Migrations
                     Completed = table.Column<bool>(type: "bit", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     JobId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Todos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Todos_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Todos_Users_Username",
+                        column: x => x.Username,
                         principalTable: "Users",
                         principalColumn: "Username");
                 });
@@ -74,9 +74,9 @@ namespace TodoApi.Migrations
                 column: "TodoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Todos_UserId",
+                name: "IX_Todos_Username",
                 table: "Todos",
-                column: "UserId");
+                column: "Username");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

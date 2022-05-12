@@ -60,12 +60,12 @@ namespace TodoApi.Migrations
                     b.Property<string>("Priority")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Username");
 
                     b.ToTable("Todos");
                 });
@@ -113,9 +113,11 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Models.Todo", b =>
                 {
-                    b.HasOne("Models.User", null)
+                    b.HasOne("Models.User", "User")
                         .WithMany("Todos")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Username");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Todo", b =>

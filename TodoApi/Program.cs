@@ -46,7 +46,7 @@ builder.Services.AddHangfire(configuration => configuration
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UseSqlServerStorage(builder.Configuration.GetConnectionString("Hangfire_TodoApiDatabase"), new SqlServerStorageOptions
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("TodoApiDatabase"), new SqlServerStorageOptions
     {
       CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
       SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
