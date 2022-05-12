@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(TodoApiContext))]
-    [Migration("20220429045015_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220512015958_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,12 +62,12 @@ namespace TodoApi.Migrations
                     b.Property<string>("Priority")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("Username")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Username");
 
                     b.ToTable("Todos");
                 });
@@ -115,9 +115,11 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Models.Todo", b =>
                 {
-                    b.HasOne("Models.User", null)
+                    b.HasOne("Models.User", "User")
                         .WithMany("Todos")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Username");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Todo", b =>

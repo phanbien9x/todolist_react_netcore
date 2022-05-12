@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Models
 {
   public class Attachment
@@ -11,6 +13,5 @@ namespace Models
     public string Id { get; set; }
     public string Name { get; set; }
     public string TodoId { get; set; }
-    // public virtual Todo Todo { get; set; }
   }
 }

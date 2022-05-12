@@ -33,8 +33,8 @@ namespace TodoApi.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      return await _context.Todos.Where(o => o.UserId == userinfo.Username).OrderBy(o => o.DueDate).ToListAsync();
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      return await _context.Todos.Where(o => o.Username == username).OrderBy(o => o.DueDate).ToListAsync();
     }
 
     // GET: api/todo/5
@@ -44,14 +44,8 @@ namespace TodoApi.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<Todo>> GetTodo(string id)
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      var todo = await _context.Todos.FirstOrDefaultAsync(o => o.UserId == userinfo.Username && o.Id == id);
-      ICollection<Attachment> attachment = await _context.Attachments.Where(o => o.TodoId == id).ToListAsync();
-      if (attachment.Count > 0)
-      {
-        todo.Attachments = attachment;
-      }
-
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var todo = await _context.Todos.Include(item => item.Attachments).FirstOrDefaultAsync(o => o.Username == username && o.Id == id);
       if (todo == null)
       {
         return NotFound();
@@ -68,8 +62,8 @@ namespace TodoApi.Controllers
     [HttpPatch("{id}")]
     public async Task<ActionResult<Todo>> PatchTodo(string id, TodoBody body)
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      var selectedTodo = await _context.Todos.FirstOrDefaultAsync(o => o.UserId == userinfo.Username && o.Id == id);
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var selectedTodo = await _context.Todos.FirstOrDefaultAsync(o => o.Username == username && o.Id == id);
       if (selectedTodo == null) return NotFound();
       bool dueDateChanged = selectedTodo.DueDate != body.DueDate;
       selectedTodo.getDataFrom(body);
@@ -97,8 +91,8 @@ namespace TodoApi.Controllers
     [Route("{id}/attachment")]
     public async Task<ActionResult<Attachment>> PostAttachment(string id, IFormFile file)
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      var selectedTodo = await _context.Todos.FirstOrDefaultAsync(o => o.UserId == userinfo.Username && o.Id == id);
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var selectedTodo = await _context.Todos.FirstOrDefaultAsync(o => o.Username == username && o.Id == id);
       if (selectedTodo == null) return NotFound("Not found this todo item!");
       DateTimeOffset now = (DateTimeOffset)DateTime.UtcNow;
       string newFileName = now.ToString("dd-MM-yyyy-HH-mm-ss__") + file.FileName;
@@ -134,8 +128,8 @@ namespace TodoApi.Controllers
     [Route("attachment/{id}")]
     public async Task<ActionResult<Todo>> DeleteAttachment(string id)
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      var selectedTodos = await _context.Todos.Where(o => o.UserId == userinfo.Username).Select(o => o.Id).ToListAsync();
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var selectedTodos = await _context.Todos.Where(o => o.Username == username).Select(o => o.Id).ToListAsync();
       Attachment selectedAttachment = await _context.Attachments.FirstOrDefaultAsync(o => selectedTodos.Contains(o.TodoId) && o.Id == id);
       if (selectedAttachment == null) return NotFound();
       _context.Attachments.Remove(selectedAttachment);
@@ -167,7 +161,7 @@ namespace TodoApi.Controllers
       Todo newTodo = new Todo();
       newTodo.getDataFrom(body);
       newTodo.Id = Guid.NewGuid().ToString();
-      newTodo.UserId = username;
+      newTodo.Username = username;
       _context.Todos.Add(newTodo);
       try
       {
@@ -196,8 +190,8 @@ namespace TodoApi.Controllers
     [HttpDelete("{id}")]
     public async Task<ActionResult<Todo>> DeleteTodo(string id)
     {
-      var userinfo = await _context.Users.FirstOrDefaultAsync(o => o.Username.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-      var todo = await _context.Todos.FirstOrDefaultAsync(o => o.UserId == userinfo.Username && o.Id == id);
+      var username = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var todo = await _context.Todos.FirstOrDefaultAsync(o => o.Username == username && o.Id == id);
       ICollection<Attachment> attachments = await _context.Attachments.Where(o => o.TodoId == id).ToListAsync();
       if (todo == null)
       {
